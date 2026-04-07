@@ -9,14 +9,14 @@ DOI walks organizations through a structured assessment: from initial maturity e
 1. **Assesses** organizational digital maturity (Level 1-5) with hard cap gates
 2. **Verifies** that documented roles match actual day-to-day reality
 3. **Classifies** every task by AI automation potential (4-stage framework)
-4. **Measures** friction at task, role, and department levels (Friction Tax)
+4. **Measures** friction across the Three C's (Consistency, Clarity, Capacity) at task, role, and department levels (Friction Tax)
 5. **Routes** bottlenecks through People → Process → Tools
 6. **Produces** a tiered implementation roadmap with projected impact
 
 ## Quick Start
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/3rd-Brain/doi-method.git
 cd doi-method
 ./install-doi.sh
 ```
@@ -76,9 +76,23 @@ Use `/doi-run` for the full orchestrated engagement, or invoke individual phases
 | 3 | Agentic Workflow | Medium (multi-step AI) |
 | 4 | AI Coworker | High (full autonomy) |
 
+### The Three C's
+
+The outcomes DOI is building toward. They arrive in a chain — each is a prerequisite for the next:
+
+| C | Manifests At | What Enables It |
+|---|---|---|
+| **Consistency** | Level 2 | Documented processes + tools that enforce data standards |
+| **Clarity** | Level 3 | Unified data removes copy/paste; dashboards reflect reality |
+| **Capacity** | Level 4+ | Automation handles routine tasks; 5-10x gains on key workflows |
+
+> "Without Consistency, you can't have real Clarity. If your data is messy, your dashboards are misleading. Without Clarity, you can't confidently identify bottlenecks and unlock Capacity. You'd be scaling blind."
+
+Phase 5 scores every task across these three dimensions. The Friction Tax is derived from those scores.
+
 ### Friction Tax
 
-Percentage of operational capacity consumed by friction rather than productive output. Measured at task → role → department levels.
+Percentage of operational capacity consumed by friction rather than productive output. Computed from Three C's scores at task → role → department levels.
 
 ### People → Process → Tools
 
