@@ -133,7 +133,7 @@ DOI's sequencing principle. Fix people gaps first, then process, then tools. Too
 
 DOI Method is designed, built, and maintained by **[3rd Brain](https://3rdbrain.co)** — a digital operations consultancy that builds AI-native systems for growing businesses.
 
-If you're using this for client engagements or want to license it commercially, reach out at **hello@3rdbrain.co**.
+If you're using this for client engagements or want to license it commercially, reach out at **[3rdbrain.co](https://3rdbrain.co)**.
 
 ---
 
