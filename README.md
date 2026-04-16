@@ -1,4 +1,4 @@
-# Turns Claude into your top AI Operations Consultant
+# Turn Claude Into A Top 1% AI Operations Consultant
 
 **The Digital Operations Institute Method**
 
