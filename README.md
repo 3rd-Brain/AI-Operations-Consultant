@@ -28,7 +28,7 @@ This is not a report someone reads and shelves. Every output feeds the next phas
 ## Quick Start
 
 ```bash
-git clone https://github.com/gentoftech/doi-method.git
+git clone https://github.com/3rd-Brain/doi-method.git
 cd doi-method
 ./install-doi.sh
 ```
@@ -50,7 +50,7 @@ Claude picks up the methodology and walks you through every phase.
 Search for **DOI Method** in the Cowork plugin marketplace, or install from source:
 
 ```bash
-git clone https://github.com/gentoftech/doi-method.git
+git clone https://github.com/3rd-Brain/doi-method.git
 cd doi-method
 ./install-doi.sh
 ```
@@ -60,7 +60,7 @@ Installs as a self-contained plugin at `~/.claude/plugins/doi-method/`.
 ### Claude Code CLI
 
 ```bash
-git clone https://github.com/gentoftech/doi-method.git
+git clone https://github.com/3rd-Brain/doi-method.git
 cd doi-method
 ./install-doi.sh --legacy
 ```
