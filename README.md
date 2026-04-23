@@ -34,8 +34,8 @@ You do not have to run the whole thing. `/doi-run` is a consultant — after int
 Search for **DOI Method** in the Cowork plugin marketplace, or install from source:
 
 ```bash
-git clone https://github.com/3rd-Brain/doi-method.git
-cd doi-method
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cd AI-Operations-Consultant
 ./install-doi.sh
 ```
 
@@ -44,8 +44,8 @@ Installs as a self-contained plugin at `~/.claude/plugins/doi-method/`.
 ### Claude Code CLI
 
 ```bash
-git clone https://github.com/3rd-Brain/doi-method.git
-cd doi-method
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cd AI-Operations-Consultant
 ./install-doi.sh --legacy
 ```
 
@@ -56,8 +56,8 @@ Copies skills, agents, and scripts to your `~/.claude/` directories.
 ## Quick Start
 
 ```bash
-git clone https://github.com/3rd-Brain/doi-method.git
-cd doi-method
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cd AI-Operations-Consultant
 ./install-doi.sh
 ```
 
