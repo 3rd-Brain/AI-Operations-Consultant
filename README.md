@@ -2,9 +2,9 @@
 
 **The Digital Operations Institute Method**
 
-Most AI readiness tools give you a questionnaire and a score. The DOI Method gives you a structured engagement — maturity scoring, role verification, outcome mapping, task classification, friction analysis, and a sequenced implementation roadmap. The same methodology behind 50+ client engagements at [3rd Brain](https://3rdbrain.co), packaged as a Claude plugin.
+Most AI readiness tools give you a questionnaire and a score. The DOI Method gives you a consultant — conversational intake, role verification, outcome mapping, task classification, friction analysis, and a sequenced implementation roadmap. The same methodology behind 50+ client engagements at [3rd Brain](https://3rdbrain.co), packaged as a Claude plugin.
 
-Install it. Type `/doi-run`. Your assessment starts.
+Install it. Type `/doi-run`. The consultant starts asking questions — then routes you to the path that fits.
 
 ---
 
@@ -22,6 +22,8 @@ Install it. Type `/doi-run`. Your assessment starts.
 | **Implementation Roadmap** | Tiered, sequenced plan with projected friction reduction |
 
 This is not a report someone reads and shelves. Every output feeds the next phase, and the final roadmap is sequenced by impact — what to fix first, what to automate, and what to leave alone.
+
+You do not have to run the whole thing. `/doi-run` is a consultant — after intake it asks what you want out of the engagement. Just a maturity score? A deep dive on one broken role? A pillars snapshot? Full 10-phase engagement? It routes accordingly.
 
 ---
 
@@ -45,10 +47,10 @@ Installs as a self-contained plugin at `~/.claude/plugins/doi-method/`.
 git clone https://github.com/3rd-Brain/doi-method.git
 cd doi-method
 ./install-doi.sh --legacy
-
 ```
 
 Copies skills, agents, and scripts to your `~/.claude/` directories.
+
 ---
 
 ## Quick Start
@@ -65,17 +67,25 @@ Open Claude Code and type:
 /doi-run
 ```
 
-Claude picks up the methodology and walks you through every phase.
+The consultant interviews you (7-section consulting-style intake), then asks what you're trying to get out of the engagement and routes you to the right path. Pause or stop any time — state is saved.
 
 ---
 
 ## How to Use It
 
-**Start a new engagement:** Type `/doi-run`. Claude asks for the organization name and goals, creates a workspace, and begins Phase 0.
+**Start a new engagement:** Type `/doi-run`. The consultant walks you through a consulting-style intake — organization, current state, history with automation, tech stack, goals, constraints, stakeholders. Then it asks what you want:
 
-**Resume an engagement:** Type `/doi-run` again. Claude finds the existing engagement and picks up where you left off.
+1. **Full engagement** — all 10 phases across every department and role (heaviest lift, most complete picture)
+2. **Maturity score only** — 30-question assessment → Level 1-5 reading in ~20 minutes
+3. **Single-role deep dive** — pick one role, run verification, outcome mapping, task classification, and friction scoring
+4. **Pillars snapshot** — evidence-backed scoring against foundational + advanced readiness pillars
+5. **"You tell me"** — describe your situation, the consultant picks the path
 
-**Run a single phase:** Each phase has its own command (`/doi-intake`, `/doi-assess`, `/doi-setup`, etc.) if you need to re-run or skip ahead.
+Whatever you pick, the intake you did up front populates the context folder that every downstream phase reads from — so you only do the interview once.
+
+**Resume an engagement:** Type `/doi-run` again. The consultant finds the existing engagement, shows you where you left off, and asks what you want to do next.
+
+**Skip the consultant (power-user shortcut):** Type `/doi-engage` to run the full 10-phase pipeline end-to-end without the routing interview. Or invoke any single phase directly (`/doi-assess`, `/doi-pillars`, etc.) if you already know what you want.
 
 **Pause or stop:** Say "pause" or "stop" at any point. State is saved. Come back tomorrow, next week — the engagement holds.
 
@@ -85,30 +95,53 @@ Claude picks up the methodology and walks you through every phase.
 
 ## How It Works
 
-DOI Method is a skill system — 10 phase-specific skills, an isolated critic agent, and 6 computation scripts, wired together by a single orchestrator. Each phase has one job. Output from one phase becomes input to the next.
+DOI Method is a consultant-first skill system. `/doi-run` is the consultant — it interviews you, then routes to the appropriate execution path. The execution paths are separate skills that do the actual work.
 
 ```
-Phase 0: Intake --> Phase 1: Assess --> [Critic] --> Gate
-                                                       |
-                    Phase 2: Setup (per department) <---+
-                        |
-         +--------------+-- Per Role Loop --------------+
-         |              v                                |
-         |  Phase 3: Verify --> [Critic] --> Gate        |
-         |  Phase 4: Outcomes --> [Critic] --> Gate      |
-         |  Phase 5: Roles --> [Critic] --> Gate         |
-         |  Phase 6: Friction --> [Critic] --> Gate      |
-         |              |                                |
-         +--------------+--------------------------------+
-                        v
-         Phase 7: Route --> [Critic] --> Gate
-         Phase 8: Pillars --> [Critic] --> Gate
-         Phase 9: Roadmap --> [Critic] --> Gate --> Done
+/doi-run (consultant)
+    |
+    +--> /doi-intake (consulting-style interview)
+    |        |
+    |        v
+    |    context/ folder + company-profile.md
+    |        |
+    |        v
+    +--> Routing Interview: "What do you want?"
+             |
+     +-------+---------+------------+---------------+
+     |                 |            |               |
+     v                 v            v               v
+ /doi-engage      /doi-assess   role loop     /doi-pillars
+ (full pipeline)  (score only)  (one role)    (pillars only)
+     |
+     v
+ Phase 1: doi-assess   --> [Critic] --> Gate
+ Phase 2: doi-setup (per department)
+    |
+    +---- Per Role Loop ----+
+    |  Phase 3: doi-verify   --> [Critic] --> Gate
+    |  Phase 4: doi-outcomes --> [Critic] --> Gate
+    |  Phase 5: doi-roles    --> [Critic] --> Gate
+    |  Phase 6: doi-friction --> [Critic] --> Gate
+    +-----------------------+
+    |
+ Phase 7: doi-route    --> [Critic] --> Gate
+ Phase 8: doi-pillars  --> [Critic] --> Gate
+ Phase 9: doi-roadmap  --> [Critic] --> Gate --> Done
 ```
+
+### Meta Commands
+
+| Command | What It Does |
+|---|---|
+| `/doi-run` | **Consultant front-door.** Runs intake, then interviews you and routes to the right path. This is the default entry point. |
+| `/doi-engage` | Runs the full 10-phase pipeline end-to-end without the routing interview. Assumes intake is already complete. |
+
+### Phase Commands
 
 | Phase | Command | What Happens |
 |---|---|---|
-| 0 | `/doi-intake` | Gather organization context and goals |
+| 0 | `/doi-intake` | 7-section consulting-style interview — builds the `context/` folder every downstream phase reads from |
 | 1 | `/doi-assess` | 30-question maturity checklist — determines Level 1-5 |
 | 2 | `/doi-setup` | Define departments, roles, and department-level outcomes |
 | 3 | `/doi-verify` | Probe actual day-to-day work vs. what is documented |
@@ -125,11 +158,13 @@ After each critical phase, an independent **critic agent** reviews the output in
 
 ## Why This Is Different
 
-**It is a methodology, not a questionnaire.** Most AI readiness tools ask you 20 questions and hand you a score. The DOI Method runs a full engagement — it verifies what your team actually does, maps what they are supposed to produce, classifies every task, measures friction, and builds a roadmap sequenced by impact.
+**It is a consultant, not a questionnaire.** Most AI readiness tools ask you 20 questions and hand you a score. The DOI Method starts with a consulting-style intake, asks what you're trying to learn, and routes you to the path that actually answers the question. If you need a quick maturity score, you get that. If you need a full engagement, you get that. No forced commitment to a 10-phase pipeline you don't need.
 
 **It assesses from the inside out.** No surface-level scans. The method works with your people, department by department, role by role. It catches the gap between how work is documented and how it actually happens.
 
 **It has a critic.** After every critical phase, an independent reviewer tears the work apart in isolation — no conversation context, just the raw output. Methodology violations, scoring inconsistencies, and blind spots get flagged before anything moves forward.
+
+**The intake is real.** Phase 0 is not a 5-field form — it is a seven-section consulting interview that populates a `context/` folder every downstream phase reads from. Organization basics, current state, history with automation, tech stack, goals, constraints, stakeholders. Thin intake produces thin analysis; this intake is built to ground every phase that follows.
 
 **Built from 50+ client engagements.** This is not a framework designed in a vacuum. It is the methodology behind the [3rd Brain](https://3rdbrain.co) consulting practice, refined across real organizations over nearly four years.
 
