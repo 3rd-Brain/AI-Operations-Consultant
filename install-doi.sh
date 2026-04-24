@@ -1,7 +1,9 @@
 #!/bin/bash
 # DOI Method Installer (Claude Code CLI)
-# Supports plugin-mode install to ~/.claude/plugins/ and legacy flat copy.
-# For Cowork, upload the .skill files from dist/cowork/ instead.
+# Supports standalone skill install to ~/.claude/skills/ (default)
+# and plugin-mode install to ~/.claude/plugins/ (optional).
+# For Cowork, upload the repo as a custom plugin file for the full flow,
+# or upload the .skill files from dist/cowork/ for direct /doi-run skills.
 # Run from the folder containing this script.
 
 set -e
@@ -12,8 +14,10 @@ SOURCE_AGENTS="$SCRIPT_DIR/agents"
 SOURCE_SCRIPTS="$SCRIPT_DIR/scripts"
 
 # Determine install mode
-INSTALL_MODE="plugin"  # default: Cowork plugin
-if [ "$1" = "--legacy" ]; then
+INSTALL_MODE="legacy"  # default: standalone skills for bare /doi-run
+if [ "$1" = "--plugin" ]; then
+    INSTALL_MODE="plugin"
+elif [ "$1" = "--legacy" ]; then
     INSTALL_MODE="legacy"
 fi
 
@@ -23,10 +27,11 @@ echo "===================="
 echo ""
 
 if [ "$INSTALL_MODE" = "plugin" ]; then
-    # Cowork-style: symlink or copy entire plugin to ~/.claude/plugins/
+    # Claude Code plugin install: namespaced command (/doi-method:doi-run)
     PLUGIN_DIR="$HOME/.claude/plugins/doi-method"
-    echo "Mode:        Claude Code CLI plugin"
+    echo "Mode:        Claude Code plugin"
     echo "Install to:  $PLUGIN_DIR"
+    echo "Command:     /doi-method:doi-run"
     echo ""
 
     if [ -d "$PLUGIN_DIR" ]; then
@@ -57,18 +62,19 @@ if [ "$INSTALL_MODE" = "plugin" ]; then
     chmod +x "$PLUGIN_DIR/scripts/"*.sh 2>/dev/null || true
 
     echo ""
-    echo "Done. Open Claude Code and run: /doi-run"
+    echo "Done. Open Claude Code and run: /doi-method:doi-run"
 
 else
-    # Legacy mode: copy skills/agents/scripts to ~/.claude/ subdirectories
+    # Standalone mode: copy skills/agents/scripts to ~/.claude/ subdirectories
     SKILLS_DIR="$HOME/.claude/skills"
     AGENTS_DIR="$HOME/.claude/agents"
     SCRIPTS_DIR="$HOME/.claude/scripts"
 
-    echo "Mode:        Legacy (skill copy)"
+    echo "Mode:        Standalone skills"
     echo "Skills dir:  $SKILLS_DIR"
     echo "Agents dir:  $AGENTS_DIR"
     echo "Scripts dir: $SCRIPTS_DIR"
+    echo "Command:     /doi-run"
     echo ""
 
     mkdir -p "$SKILLS_DIR" "$AGENTS_DIR" "$SCRIPTS_DIR"
