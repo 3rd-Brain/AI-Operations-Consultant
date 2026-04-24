@@ -29,9 +29,16 @@ You do not have to run the whole thing. `/doi-run` is a consultant — after int
 
 ## Installation
 
-### Claude Cowork (recommended)
+### Claude Code CLI (recommended)
 
-Search for **DOI Method** in the Cowork plugin marketplace, or install from source:
+In Claude Code, run:
+
+```
+/plugin marketplace add 3rd-Brain/AI-Operations-Consultant
+/plugin install doi-method@doi-method
+```
+
+Or install from a local clone:
 
 ```bash
 git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
@@ -39,17 +46,11 @@ cd AI-Operations-Consultant
 ./install-doi.sh
 ```
 
-Installs as a self-contained plugin at `~/.claude/plugins/doi-method/`.
+### Cowork
 
-### Claude Code CLI
+Cowork uses a separate skill system. Download the `.skill` files from `dist/cowork/` in this repo and upload each one via **Skills → Create skill → Import from `.skill` file**. Start with `doi-run.skill` at minimum; install all 12 for the full engagement flow.
 
-```bash
-git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
-cd AI-Operations-Consultant
-./install-doi.sh --legacy
-```
-
-Copies skills, agents, and scripts to your `~/.claude/` directories.
+Full install notes, including the legacy flat-copy mode, are in [INSTALL.md](INSTALL.md).
 
 ---
 
@@ -194,9 +195,11 @@ DOI Method is designed, built, and maintained by [**3rd Brain**](https://3rdbrai
 
 ## Uninstall
 
-**Cowork plugin:** `rm -rf ~/.claude/plugins/doi-method`
+**Claude Code CLI plugin:** `/plugin uninstall doi-method@doi-method` (or `rm -rf ~/.claude/plugins/doi-method` for manual installs)
 
-**Legacy install:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/scripts/doi/`
+**Claude Code CLI legacy install:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/scripts/doi/`
+
+**Cowork:** remove each `doi-*` skill from Skills → Manage.
 
 ---
 

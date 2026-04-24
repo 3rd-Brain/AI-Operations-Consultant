@@ -1,6 +1,7 @@
 #!/bin/bash
-# DOI Method Installer
-# Supports both Cowork plugin installation and legacy skill-copy installation.
+# DOI Method Installer (Claude Code CLI)
+# Supports plugin-mode install to ~/.claude/plugins/ and legacy flat copy.
+# For Cowork, upload the .skill files from dist/cowork/ instead.
 # Run from the folder containing this script.
 
 set -e
@@ -24,7 +25,7 @@ echo ""
 if [ "$INSTALL_MODE" = "plugin" ]; then
     # Cowork-style: symlink or copy entire plugin to ~/.claude/plugins/
     PLUGIN_DIR="$HOME/.claude/plugins/doi-method"
-    echo "Mode:        Cowork plugin"
+    echo "Mode:        Claude Code CLI plugin"
     echo "Install to:  $PLUGIN_DIR"
     echo ""
 
