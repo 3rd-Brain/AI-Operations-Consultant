@@ -1,9 +1,8 @@
 #!/bin/bash
 # DOI Method Installer (Claude Code CLI)
-# Supports standalone skill install to ~/.claude/skills/ (default)
-# and plugin-mode install to ~/.claude/plugins/ (optional).
-# For Cowork, upload the repo as a custom plugin file for the full flow,
-# or upload the .skill files from dist/cowork/ for direct /doi-run skills.
+# Official install mode: plugin install to ~/.claude/plugins/
+# Advanced mode: standalone skill install to ~/.claude/skills/
+# For Cowork, upload the repo as a custom plugin for the full flow.
 # Run from the folder containing this script.
 
 set -e
@@ -13,13 +12,28 @@ SOURCE_SKILLS="$SCRIPT_DIR/skills"
 SOURCE_AGENTS="$SCRIPT_DIR/agents"
 SOURCE_SCRIPTS="$SCRIPT_DIR/scripts"
 
+usage() {
+    echo "Usage: ./install-doi.sh [--plugin|--standalone|--legacy]"
+    echo ""
+    echo "  --plugin       Install DOI as a Claude Code plugin (default)"
+    echo "  --standalone   Install DOI as standalone skills for bare /doi-run"
+    echo "  --legacy       Alias for --standalone"
+}
+
 # Determine install mode
-INSTALL_MODE="legacy"  # default: standalone skills for bare /doi-run
-if [ "$1" = "--plugin" ]; then
-    INSTALL_MODE="plugin"
-elif [ "$1" = "--legacy" ]; then
-    INSTALL_MODE="legacy"
-fi
+INSTALL_MODE="plugin"  # default: plugin install for /doi-method:doi-run
+case "$1" in
+    ""|--plugin)
+        INSTALL_MODE="plugin"
+        ;;
+    --standalone|--legacy)
+        INSTALL_MODE="standalone"
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
 
 echo ""
 echo "DOI Method Installer"
@@ -29,7 +43,7 @@ echo ""
 if [ "$INSTALL_MODE" = "plugin" ]; then
     # Claude Code plugin install: namespaced command (/doi-method:doi-run)
     PLUGIN_DIR="$HOME/.claude/plugins/doi-method"
-    echo "Mode:        Claude Code plugin"
+    echo "Mode:        Claude Code plugin (official)"
     echo "Install to:  $PLUGIN_DIR"
     echo "Command:     /doi-method:doi-run"
     echo ""
@@ -51,7 +65,7 @@ if [ "$INSTALL_MODE" = "plugin" ]; then
     # If we're in a git repo, symlink for easy updates; otherwise copy
     if [ -d "$SCRIPT_DIR/.git" ]; then
         ln -s "$SCRIPT_DIR" "$PLUGIN_DIR"
-        echo "Symlinked: $SCRIPT_DIR → $PLUGIN_DIR"
+        echo "Symlinked: $SCRIPT_DIR -> $PLUGIN_DIR"
         echo "(git pull in the source repo to update)"
     else
         cp -r "$SCRIPT_DIR" "$PLUGIN_DIR"
@@ -70,7 +84,7 @@ else
     AGENTS_DIR="$HOME/.claude/agents"
     SCRIPTS_DIR="$HOME/.claude/scripts"
 
-    echo "Mode:        Standalone skills"
+    echo "Mode:        Standalone skills (advanced)"
     echo "Skills dir:  $SKILLS_DIR"
     echo "Agents dir:  $AGENTS_DIR"
     echo "Scripts dir: $SCRIPTS_DIR"
