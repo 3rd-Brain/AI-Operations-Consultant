@@ -1,24 +1,12 @@
 {
   "name": "doi-method",
   "version": "2.0.0",
-  "description": "Digital Operations Institute — AI/automation readiness assessment methodology for Claude Code",
-  "author": "3rd Brain DigiOps",
-  "license": "GPL-3.0",
-  "skills": [
-    "skills/doi-run",
-    "skills/doi-intake",
-    "skills/doi-engage",
-    "skills/doi-assess",
-    "skills/doi-setup",
-    "skills/doi-verify",
-    "skills/doi-outcomes",
-    "skills/doi-roles",
-    "skills/doi-friction",
-    "skills/doi-route",
-    "skills/doi-pillars",
-    "skills/doi-roadmap"
-  ],
-  "agents": [
-    "agents/doi-review"
-  ]
+  "description": "Digital Operations Institute — AI/automation readiness assessment methodology for Claude Code and Cowork",
+  "author": {
+    "name": "3rd Brain DigiOps",
+    "url": "https://github.com/3rd-Brain/AI-Operations-Consultant"
+  },
+  "homepage": "https://github.com/3rd-Brain/AI-Operations-Consultant",
+  "repository": "https://github.com/3rd-Brain/AI-Operations-Consultant",
+  "license": "GPL-3.0"
 }
