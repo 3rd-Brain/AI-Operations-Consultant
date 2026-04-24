@@ -1,37 +1,20 @@
 # Installing DOI Method
 
-DOI Method ships in three install surfaces, and the slash command depends on which one you choose:
+DOI is now **plugin-first**.
 
-- **Claude Code standalone skills** -> `/doi-run`
-- **Claude Code or Cowork plugin installs** -> `/doi-method:doi-run`
-- **Cowork direct `.skill` imports** -> `/doi-run`
+The official install and usage story is:
+- Install DOI as a plugin
+- Run `/doi-method:doi-run`
 
-If you saw `Unknown command: /doi-run` after uploading DOI as a plugin, that is expected behavior for a plugin install. Use the plugin namespace: `/doi-method:doi-run`.
+If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, that is expected for a plugin install. Plugin commands are namespaced, so the correct command is:
 
-## Claude Code: standalone skills
-
-Use this if you want the command to be exactly `/doi-run`.
-
-```bash
-git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
-cd AI-Operations-Consultant
-./install-doi.sh
+```text
+/doi-method:doi-run
 ```
 
-This is the default installer mode. It copies:
-- `skills/` -> `~/.claude/skills/`
-- `agents/` -> `~/.claude/agents/`
-- `scripts/` -> `~/.claude/scripts/doi/`
+## Official Install Paths
 
-Then run:
-
-```
-/doi-run
-```
-
-## Claude Code: plugin install
-
-Use this if you want DOI installed as a Claude plugin with its bundled skills and reviewer agent.
+### Claude Code: marketplace plugin
 
 ```text
 /plugin marketplace add 3rd-Brain/AI-Operations-Consultant
@@ -40,57 +23,93 @@ Use this if you want DOI installed as a Claude plugin with its bundled skills an
 
 Then run:
 
-```
+```text
 /doi-method:doi-run
 ```
 
-If you are installing from a local clone instead of the marketplace:
+### Claude Code: local clone plugin install
 
 ```bash
-./install-doi.sh --plugin
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cd AI-Operations-Consultant
+./install-doi.sh
 ```
 
-That installs the repo into `~/.claude/plugins/doi-method/` and uses the same namespaced command.
+`./install-doi.sh` defaults to plugin mode.
 
-## Cowork: full plugin upload
+Then run:
 
-This is the recommended Cowork path for the full DOI flow.
-
-1. Download or zip the repo.
-2. In Cowork, upload it as a custom plugin.
-3. Invoke DOI with:
-
-```
+```text
 /doi-method:doi-run
 ```
 
-Why this is the recommended Cowork install:
-- It keeps the shared shell scripts bundled with the plugin
-- It includes the `doi-review` agent used in the full pipeline
-- It matches Claude's plugin command model instead of relying on bare skill imports
+### Cowork: custom plugin upload
 
-## Cowork: direct `.skill` imports
+1. Download or zip the repo
+2. Upload it in Cowork as a custom plugin
+3. Run:
 
-Use this if you want bare `/doi-run` inside Cowork's skill menu.
+```text
+/doi-method:doi-run
+```
+
+This is the recommended Cowork install because it includes:
+- the shared DOI shell scripts
+- the bundled `doi-review` agent
+- the same namespaced command model as Claude Code plugin installs
+
+## Verify
+
+For the official install paths above, the command should always be:
+
+```text
+/doi-method:doi-run
+```
+
+## Advanced And Legacy Paths
+
+These still work, but they are not the primary install story.
+
+### Standalone Claude Code skills
+
+Use this only if you explicitly want bare `/doi-run` instead of the plugin namespace.
+
+```bash
+./install-doi.sh --standalone
+```
+
+Then run:
+
+```text
+/doi-run
+```
+
+This copies:
+- `skills/` -> `~/.claude/skills/`
+- `agents/` -> `~/.claude/agents/`
+- `scripts/` -> `~/.claude/scripts/doi/`
+
+### Cowork direct `.skill` imports
+
+Use this only if you explicitly want direct skill imports instead of a plugin upload.
 
 1. Download the `.skill` files from `dist/cowork/`
 2. In Cowork, go to **Skills -> Create skill -> Import from `.skill` file**
 3. Upload each DOI skill
+4. Run:
 
-Then run:
-
-```
+```text
 /doi-run
 ```
 
 Notes:
-- `doi-run.skill` is only the entry point. Install the downstream DOI skills too if you want the full engagement flow.
-- The packaged Cowork `.skill` bundles are meant to be self-contained, including the shared DOI shell scripts they call.
-- The direct `.skill` path does **not** include the bundled reviewer agent, so the full plugin upload remains the better Cowork install for the full end-to-end experience.
+- `doi-run.skill` is only the entry point. Install the downstream DOI skills too for the full flow.
+- The `.skill` bundles now include the shared DOI shell scripts they call.
+- This path does **not** include the bundled reviewer agent, so the plugin install remains the better Cowork experience.
 
 ## Rebuild Cowork `.skill` packages
 
-If you change any DOI skill and need fresh Cowork bundles:
+If you edit a DOI skill and want fresh Cowork bundles:
 
 ```bash
 python scripts/build-cowork-skills.py
@@ -102,22 +121,12 @@ Or package a single skill:
 python scripts/build-cowork-skills.py --skill doi-run
 ```
 
-The build script strips Claude Code-only frontmatter that Cowork rejects and bundles the shared DOI shell scripts into each `.skill` package.
-
-## Verify
-
-Expected commands by install type:
-- Standalone Claude Code skills: `/doi-run`
-- Claude Code plugin: `/doi-method:doi-run`
-- Cowork plugin upload: `/doi-method:doi-run`
-- Cowork direct `.skill` imports: `/doi-run`
-
 ## Uninstall
 
 **Claude Code plugin:** `/plugin uninstall doi-method@doi-method`
 
 **Claude Code standalone:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/scripts/doi/`
 
-**Cowork plugin:** remove the DOI plugin from Customize -> Plugins
+**Cowork plugin:** remove DOI from Customize -> Plugins
 
 **Cowork skills:** remove each `doi-*` skill from Skills -> Manage
