@@ -1,10 +1,11 @@
 #!/bin/bash
-# update-state.sh — Update .doi-state.md and ~/.claude/.doi-registry.md
+# update-state.sh - Update .doi-state.md and the DOI registry file.
 #
 # Usage: update-state.sh <engagement-folder> <key=value> [key=value ...]
 #
 # Updates YAML frontmatter fields in .doi-state.md and the matching row
-# in the global registry.
+# in the DOI registry. If DOI_REGISTRY is not set, defaults to a registry
+# file alongside the engagement root (or CLAUDE_PLUGIN_DATA when available).
 #
 # Special keys:
 #   phase=<value>          Updates phase in both state and registry
@@ -28,8 +29,11 @@ if [ -z "$ENGAGEMENT_DIR" ]; then
 fi
 
 STATE_FILE="$ENGAGEMENT_DIR/.doi-state.md"
-REGISTRY="${DOI_REGISTRY:-$HOME/.claude/.doi-registry.md}"
+DEFAULT_REGISTRY_DIR="${CLAUDE_PLUGIN_DATA:-$(dirname "$ENGAGEMENT_DIR")}"
+REGISTRY="${DOI_REGISTRY:-$DEFAULT_REGISTRY_DIR/.doi-registry.md}"
 TODAY=$(date +%Y-%m-%d)
+
+mkdir -p "$(dirname "$REGISTRY")"
 
 if [ ! -f "$STATE_FILE" ]; then
     echo "ERROR: State file not found: $STATE_FILE"
@@ -55,11 +59,11 @@ update_frontmatter() {
     local tmpfile="${file}.tmp"
 
     if grep -q "^${key}:" "$file" 2>/dev/null; then
-        # Key exists — replace it
+        # Key exists - replace it
         sed "s|^${key}:.*|${key}: ${value}|" "$file" > "$tmpfile"
         mv "$tmpfile" "$file"
     else
-        # Key doesn't exist — add before closing ---
+        # Key doesn't exist - add before closing ---
         # Find the second --- and insert before it
         local line_num=$(grep -n "^---$" "$file" | sed -n '2p' | cut -d: -f1)
         if [ -n "$line_num" ]; then
@@ -96,7 +100,7 @@ if [ -f "$REGISTRY" ]; then
 
         while IFS= read -r line; do
             if echo "$line" | grep -q "| $org_name " 2>/dev/null || echo "$line" | grep -q "|$org_name|" 2>/dev/null; then
-                # This is the matching row — update fields
+                # This is the matching row - update fields
                 if [ -n "$new_phase" ]; then
                     line=$(echo "$line" | awk -F'|' -v phase="$new_phase" '{
                         OFS="|"; $5=" "phase" "; print
