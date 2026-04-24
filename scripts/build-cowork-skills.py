@@ -7,19 +7,21 @@ these SKILL.md frontmatter properties:
     name, description, license, allowed-tools, metadata, compatibility
 
 Our skills have `user-invocable: true` (required by Claude Code CLI for slash
-invocation) which Cowork rejects as an unexpected property. This script copies
-each skill to a staging dir, strips the `user-invocable` line, then zips the
-result as `<skill>.skill` (Cowork's distributable format — it's just a zip).
+invocation) which Cowork rejects as an unexpected property. Cowork skill
+imports also need the shared DOI shell scripts that the skills call at runtime.
+This script copies each skill to a staging dir, strips the `user-invocable`
+line, bundles `scripts/*.sh` under `scripts/doi/`, then zips the result as
+`<skill>.skill` (Cowork's distributable format - it's just a zip).
 
-Claude Code CLI users install via the marketplace — this script is only for
-Cowork distribution.
+Claude Code CLI users install via the marketplace or `./install-doi.sh` - this
+script is only for Cowork distribution.
 
 Usage:
     python scripts/build-cowork-skills.py
     python scripts/build-cowork-skills.py --output dist/cowork
     python scripts/build-cowork-skills.py --skill doi-run    # single skill
 
-Output: dist/cowork/doi-*.skill (one per skill)
+Output: dist/cowork/doi-*.skill (one per skill, each self-contained)
 """
 
 import argparse
@@ -78,7 +80,7 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
             skip_nested = False
             new_lines.append(line)
         else:
-            # Indented / continuation line — keep only if we're not in a skipped block
+            # Indented / continuation line - keep only if we're not in a skipped block
             if not skip_nested:
                 new_lines.append(line)
 
@@ -86,7 +88,23 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
     return f"{opener}{new_frontmatter}{closer}{body}", removed
 
 
-def build_skill_package(skill_dir: Path, output_dir: Path) -> Path | None:
+def bundle_shared_scripts(repo_root: Path, staging: Path) -> int:
+    """Copy shared DOI shell scripts into the staged Cowork skill package."""
+    scripts_root = repo_root / 'scripts'
+    shared_scripts = sorted(scripts_root.glob('*.sh'))
+    if not shared_scripts:
+        return 0
+
+    bundle_root = staging / 'scripts' / 'doi'
+    bundle_root.mkdir(parents=True, exist_ok=True)
+
+    for script_path in shared_scripts:
+        shutil.copy2(script_path, bundle_root / script_path.name)
+
+    return len(shared_scripts)
+
+
+def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> Path | None:
     skill_name = skill_dir.name
     print(f"\n[{skill_name}]")
 
@@ -106,7 +124,13 @@ def build_skill_package(skill_dir: Path, output_dir: Path) -> Path | None:
             print(f"  Stripped frontmatter keys: {', '.join(removed)}")
             skill_md.write_text(patched, encoding='utf-8')
         else:
-            print(f"  No frontmatter changes needed")
+            print('  No frontmatter changes needed')
+
+        bundled_scripts = bundle_shared_scripts(repo_root, staging)
+        if bundled_scripts:
+            print(f"  Bundled {bundled_scripts} shared DOI script(s)")
+        else:
+            print('  WARNING: No shared DOI scripts found to bundle')
 
         # Zip it
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -149,7 +173,7 @@ def main():
         targets = sorted(p for p in skills_root.iterdir() if p.is_dir() and p.name.startswith('doi-'))
 
     print(f"Building {len(targets)} Cowork skill package(s) to {output_dir}")
-    results = [build_skill_package(t, output_dir) for t in targets]
+    results = [build_skill_package(t, output_dir, repo_root) for t in targets]
     failed = [t for t, r in zip(targets, results) if r is None]
 
     print("\n" + "=" * 60)
