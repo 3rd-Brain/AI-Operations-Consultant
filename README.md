@@ -34,8 +34,9 @@ If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, nothing was
 | **Bottleneck Routing** | People / Process / Tools diagnosis for high-friction work |
 | **Pillar Assessment** | Evidence-backed foundational + advanced readiness scores |
 | **Implementation Roadmap** | Tiered, sequenced plan with projected friction reduction |
+| **Working Artifacts** *(opt-in)* | Phase 10 produces shippable Skills, ICM folders, integration configs, SOPs — built one per week against the 3rd Brain Build Principles |
 
-This is not a report someone reads and shelves. Every output feeds the next phase.
+This is not a report someone reads and shelves. Every output feeds the next phase. And Phase 10 turns the roadmap into things you can actually use.
 
 ---
 
@@ -172,10 +173,71 @@ The `doi-run` skill is the consultant front door. In plugin installs, you invoke
     |
  Phase 7: doi-route    --> [Critic] --> Gate
  Phase 8: doi-pillars  --> [Critic] --> Gate
- Phase 9: doi-roadmap  --> [Critic] --> Gate --> Done
+ Phase 9: doi-roadmap  --> [Critic] --> Gate
+    |
+ Phase 10: doi-build (opt-in)
+    +-- per Tier 1 intervention --+
+    |  doi-builder produces       |
+    |  artifact in build/{slug}/  |
+    |  --> [Critic] --> Gate      |
+    |  --> Operator demos         |
+    |  --> Comes back, next       |
+    +-----------------------------+
+    |
+ --> Done
 ```
 
 After each critical phase, an independent **critic agent** reviews the output in isolation before the next phase begins.
+
+### Uploads — give the consultant your materials up-front
+
+Every engagement workspace creates an `_uploads/` folder:
+
+```text
+<engagement>/
+  _uploads/
+    general/                  # org charts, P&Ls, decks, prior assessments
+    tool-exports/             # CRM dumps, Zapier exports, integration screenshots, API docs
+    {dept-slug}/              # department-scoped materials
+      {role-slug}/            # role-scoped materials (job descriptions, SOPs, day-in-life docs)
+    MANIFEST.md               # provenance ledger every phase appends to
+```
+
+Drop files in before, during, or between sessions. The relevant phases scan and ingest:
+
+- `doi-intake` reads `_uploads/general/` to inform interview questions.
+- `doi-setup` ingests `_uploads/{dept}/{role}/` into role materials.
+- `doi-verify` checks `_uploads/` before asking for files when system access is blocked.
+- `doi-roles` reads `_uploads/tool-exports/` before web search — operator-provided exports beat vendor marketing.
+
+`MANIFEST.md` is the provenance trail. The critic uses it to verify no invented data.
+
+### 3rd Brain Build Principles
+
+DOI's recommendations are constrained by a constructive doctrine in `scripts/_config/3rd-brain-build-principles.md`:
+
+1. Frontend-first for apps
+2. Solo-agent-first for workflows
+3. Ship every week
+4. Single agent until proven otherwise
+5. ICM and folders before infrastructure
+6. Start with what we have built
+7. Demo before doc + the three architect questions (state owner, feedback signal, deletion impact)
+
+Phases 5, 7, 9, and 10 enforce these. The critic flags violations.
+
+### Phase 10 — Build (opt-in)
+
+After the roadmap is approved, `doi-build` produces working artifacts per Tier 1 intervention:
+
+- Tools+Stage 1 → ICM folder + connector config (Zapier/Make/n8n JSON)
+- Tools+Stage 2 → single Claude Skill
+- Tools+Stage 3 → ICM multi-stage folder, file-based by default
+- Tools+Stage 4 → refused by default; re-routed to Stage 3 unless overridden with measured success
+- Process bottleneck → SOP + checklist
+- People bottleneck → training brief + role description
+
+Each build ships in one week, gets demoed by the operator, and only then does the next one start. `build/{intervention-slug}/` carries the artifact + `BUILD-NOTES.md` (architect-question answers + principle compliance) + `SHIP-CHECKLIST.md` (concrete demo steps).
 
 ---
 

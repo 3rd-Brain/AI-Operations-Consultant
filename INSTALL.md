@@ -55,7 +55,8 @@ Then run:
 
 This is the recommended Cowork install because it includes:
 - the shared DOI shell scripts
-- the bundled `doi-review` agent
+- the bundled `doi-review` (critic) and `doi-builder` (Phase 10 build) agents
+- the `_config/3rd-brain-build-principles.md` doctrine file
 - the same namespaced command model as Claude Code plugin installs
 
 ## Verify
@@ -86,8 +87,8 @@ Then run:
 
 This copies:
 - `skills/` -> `~/.claude/skills/`
-- `agents/` -> `~/.claude/agents/`
-- `scripts/` -> `~/.claude/scripts/doi/`
+- `agents/` -> `~/.claude/agents/` (includes `doi-review` and `doi-builder`)
+- `scripts/` -> `~/.claude/scripts/doi/` (includes `_config/3rd-brain-build-principles.md`)
 
 ### Cowork direct `.skill` imports
 
@@ -125,7 +126,7 @@ python scripts/build-cowork-skills.py --skill doi-run
 
 **Claude Code plugin:** `/plugin uninstall doi-method@doi-method`
 
-**Claude Code standalone:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/scripts/doi/`
+**Claude Code standalone:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/agents/doi-builder ~/.claude/scripts/doi/`
 
 **Cowork plugin:** remove DOI from Customize -> Plugins
 

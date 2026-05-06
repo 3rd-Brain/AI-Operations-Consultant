@@ -89,10 +89,12 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
 
 
 def bundle_shared_scripts(repo_root: Path, staging: Path) -> int:
-    """Copy shared DOI shell scripts into the staged Cowork skill package."""
+    """Copy shared DOI shell scripts and the _config/ doctrine dir into the staged Cowork skill package."""
     scripts_root = repo_root / 'scripts'
     shared_scripts = sorted(scripts_root.glob('*.sh'))
-    if not shared_scripts:
+    config_dir = scripts_root / '_config'
+
+    if not shared_scripts and not config_dir.exists():
         return 0
 
     bundle_root = staging / 'scripts' / 'doi'
@@ -101,7 +103,14 @@ def bundle_shared_scripts(repo_root: Path, staging: Path) -> int:
     for script_path in shared_scripts:
         shutil.copy2(script_path, bundle_root / script_path.name)
 
-    return len(shared_scripts)
+    # Copy the _config/ doctrine folder so build-principles is available at runtime
+    if config_dir.exists():
+        dest_config = bundle_root / '_config'
+        if dest_config.exists():
+            shutil.rmtree(dest_config)
+        shutil.copytree(config_dir, dest_config)
+
+    return len(shared_scripts) + (1 if config_dir.exists() else 0)
 
 
 def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> Path | None:

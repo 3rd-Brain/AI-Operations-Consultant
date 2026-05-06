@@ -128,8 +128,20 @@ case "$PHASE" in
         check_file "$DEPT_DIR/gap-analysis.md"
         ;;
 
+    10)
+        # Phase 10 (Build): roadmap.md + foundational assessment + maturity assessment must exist
+        if [ -z "$DEPT_SLUG" ]; then
+            echo "ERROR: Phase 10 requires dept-slug"
+            exit 1
+        fi
+        DEPT_DIR="$ENGAGEMENT_DIR/departments/$DEPT_SLUG"
+        check_file "$DEPT_DIR/roadmap.md"
+        check_file "$DEPT_DIR/assessments/foundational.md"
+        check_file "$ENGAGEMENT_DIR/assessments/maturity-assessment.md"
+        ;;
+
     *)
-        echo "ERROR: Unknown phase '$PHASE'. Valid phases: 0-9"
+        echo "ERROR: Unknown phase '$PHASE'. Valid phases: 0-10"
         exit 1
         ;;
 esac

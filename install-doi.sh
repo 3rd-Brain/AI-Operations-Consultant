@@ -128,6 +128,13 @@ else
             cp "$script_file" "$SCRIPTS_DIR/doi/$script_name"
             chmod +x "$SCRIPTS_DIR/doi/$script_name"
         done
+
+        # Copy _config (build doctrine + any future config files)
+        if [ -d "$SOURCE_SCRIPTS/_config" ]; then
+            echo "  _config/"
+            rm -rf "$SCRIPTS_DIR/doi/_config"
+            cp -r "$SOURCE_SCRIPTS/_config" "$SCRIPTS_DIR/doi/_config"
+        fi
     fi
 
     echo ""

@@ -65,7 +65,7 @@ Before advancing, check where the engagement stands:
 
 The pipeline follows this flow:
 
-```
+```text
 Phase 1: doi-assess --> [CRITIC REVIEW] --> HUMAN GATE
   |
 Phase 2: doi-setup (per department)
@@ -88,10 +88,22 @@ Phase 7: doi-route --> [CRITIC REVIEW] --> HUMAN GATE
   |
 Phase 8: doi-pillars --> [CRITIC REVIEW] --> HUMAN GATE
   |
-Phase 9: doi-roadmap --> [CRITIC REVIEW] --> HUMAN GATE --> COMPLETE
+Phase 9: doi-roadmap --> [CRITIC REVIEW] --> HUMAN GATE
+  |
+Phase 10: doi-build (optional, per-intervention loop)
+  +--- For each Tier 1 intervention (default) -------+
+  |  doi-build dispatches doi-builder subagent       |
+  |  --> [CRITIC REVIEW (Phase 10)] --> HUMAN GATE   |
+  |  --> Operator demos via SHIP-CHECKLIST           |
+  |  --> Returns with feedback before next build     |
+  +--------------------------------------------------+
+  |
+  --> COMPLETE
 ```
 
-Then repeat Phases 2-9 for the next department. When all departments are complete, generate the org-wide summary.
+Then repeat Phases 2-9 (and optionally Phase 10) for the next department. When all departments are complete, generate the org-wide summary.
+
+**Phase 10 is opt-in.** After Phase 9 completes and the human gate is approved, ask the operator: "The roadmap is approved. Want me to proceed to Phase 10 (`doi-build`) and produce the artifacts for the Tier 1 interventions, or stop here with the roadmap as the deliverable?" If the operator wants to build, dispatch `doi-build`. If not, the engagement ends at Phase 9.
 
 ## 4. Invoking Phase Skills
 
@@ -103,7 +115,7 @@ For each phase in the sequence:
 
 ## 5. Critic Review
 
-After Phases 1, 3, 4, 5, 6, 7, 8, and 9, trigger an independent critic review:
+After Phases 1, 3, 4, 5, 6, 7, 8, 9, and per-intervention in Phase 10, trigger an independent critic review:
 
 1. Spawn the `doi-review` agent with:
    - The phase number
@@ -253,3 +265,4 @@ generated: [date]
 | 7 | doi-route | Routes bottlenecks (outcome-tagged) | Yes | Yes |
 | 8 | doi-pillars | Scores maturity pillars (outcome coverage evidence) | Yes | Yes |
 | 9 | doi-roadmap | Builds outcome-weighted implementation roadmap | Yes | Yes |
+| 10 | doi-build | Produces working artifacts per intervention via doi-builder subagent (opt-in) | Yes (per intervention) | Yes (per intervention) |
