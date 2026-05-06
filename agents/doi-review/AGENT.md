@@ -76,10 +76,12 @@ Review `roles/{role-slug}/tasks/*.md` and `responsibilities.md`:
 4. Are confidence scores present and justified? (Below 0.7 should have explicit reasoning)
 5. Are KOODAR Observe/Orient fields "N/A" for Stage 1-3 tasks? (These only apply to Stage 4 — AI Coworker level)
 6. Do workflow steps describe AI-executable actions, not human-centric descriptions? ("Retrieve data from API" not "Review the metrics")
-7. Do microservice counts match stage rules? (Stage 1=0, Stage 2=1, Stage 3=2-5, Stage 4=3-8+)
+7. Do microservice counts respect the **doctrine-updated** rules? Stage 1=0, Stage 2=1, Stage 3 **defaults to 1** (decompose to 2-5 only with cited measured bottleneck), Stage 4=3-8+ only on explicit override.
 8. Is the role snapshot present and does it match the individual task files?
 9. Does every task file include outcome_alignment in frontmatter? (aligned/indirect/unaligned — populated from outcome-map.md)
 10. Are microservices skipped for unaligned tasks? (No microservice files should exist for tasks with outcome_alignment: unaligned)
+11. **(Principle 4 — Single agent until proven otherwise)** For any Stage 3 task with >1 microservice, does the microservice file include a `## Decomposition Rationale` section citing the **measured** bottleneck (latency, quality, or cost)? Speculative decomposition without a cited measured bottleneck = CRITICAL.
+12. **(Manifest provenance)** If `integration-research.md` references the client's actual instance (specific field names, automation rules, error rates), are those facts traceable to either web-search citations or `_uploads/MANIFEST.md` rows from `_uploads/tool-exports/`? Untraceable instance-specific facts = CRITICAL (invented data).
 
 ### Phase 6 — Friction Scoring
 
@@ -106,6 +108,8 @@ Review `departments/{dept-slug}/gap-analysis.md`:
 6. Does People → Process → Tools ordering appear in the output structure?
 7. Are intervention descriptions specific to the task? ("Connect HubSpot to Sheets via Zapier" not "Integrate tools")
 8. Is the bottleneck summary count accurate? (Count of tasks per type should match the detailed sections)
+9. **(Principle 5 — ICM before infrastructure)** Does every Tools intervention carry one of `files-default` / `infrastructure-justified` tags? Any intervention tagged `infrastructure-justified` MUST cite the file-failure mode (concurrent writes, aggregations, >10K-row scale). Untagged or untagged-justified = CRITICAL.
+10. **(Principle 6 — Start with what we have built)** Does every Tools intervention carry one of `extend-existing` / `new-system` tags? `extend-existing` must name the verified tool from `verified-role.md`. `new-system` must include a one-line justification. Missing tags = CRITICAL.
 
 ### Phase 8 — Pillar Assessment
 
@@ -136,6 +140,29 @@ Review `roadmap.md`:
 11. Is the "Outcome Gaps" section present? Does it list results with no supporting tasks?
 12. Does the 5-axis prioritization include Outcome Alignment? (Should be 20% weight, not the old 4-axis table)
 13. Do Tier 1-2 interventions reference which result they advance?
+14. **(Principle 3 — Ship every week)** Does every Tier 1 intervention declare a "1-week shippable subset" AND a "Demo definition" line? Missing either = CRITICAL. If the subset description is vague ("a working version") or the demo is internal-only with no user touch, that is also CRITICAL.
+15. **(Principle 6 — Start with what we have built)** Is the "Existing Systems to Extend" section present and populated from the verified tool list / `_uploads/`? Does every Tier 1-2 intervention name which existing system it extends, OR carry a one-line justification for being a new system? Untagged interventions = CRITICAL.
+16. **(Principle 7 — Three architect questions)** Does every Tier 1-2 intervention answer all three: (a) State owner, (b) Feedback signal, (c) Deletion impact? Missing any = CRITICAL.
+17. **(Principle 1 — Frontend-first for apps)** For interventions that build an application (vs. workflow/automation/SOP), does the spec lead with the user-facing surface? Specs that lead with database schema or API contract before naming the user-facing screen = CRITICAL.
+18. **(Build doctrine compliance section)** Does every Tier 1-2 intervention include the "Build doctrine compliance" block (P1, P2/P4, P5, P6 entries)? Each entry must be `yes`, `N/A` with rationale, or `violation` with rationale. Missing block = CRITICAL.
+
+### Phase 10 — Build Artifacts
+
+Review `build/{intervention-slug}/` against the original roadmap intervention spec:
+
+1. Are `BUILD-NOTES.md` and `SHIP-CHECKLIST.md` both present? Missing either = CRITICAL.
+2. Does `BUILD-NOTES.md` answer all three architect questions (state owner, feedback signal, deletion impact)? Vague answers ("the system tracks it") = CRITICAL.
+3. Does `BUILD-NOTES.md` have a complete Build Doctrine Compliance table with explicit `yes`, `N/A` with rationale, or `violation` with rationale for each of the seven principles?
+4. Does `SHIP-CHECKLIST.md` contain concrete, sequenced steps a non-author can execute? Vague checklists ("test the workflow") = CRITICAL.
+5. Does the artifact match the matched template? (Tools+Stage 1 = ICM + connector; Tools+Stage 2 = single Skill; Tools+Stage 3 = ICM multi-stage; Process = SOP; People = training brief)
+6. **(Principle 4)** If Stage 3 was decomposed into >1 microservice/agent, is a measured bottleneck cited in `BUILD-NOTES.md`? Speculative decomposition = CRITICAL.
+7. **(Principle 4)** Was Stage 4 built? If yes, is there an explicit override note referencing measured Stage 3 success? No override note = CRITICAL.
+8. **(Principle 5)** Does the artifact use Postgres / queues / orchestration frameworks? If yes, is the spec tagged `infrastructure-justified` AND the file-failure mode cited? Missing either = CRITICAL.
+9. **(Principle 6)** If the artifact introduces a new tool/system, is the justification present and does the verified tool list confirm no existing tool could address the bottleneck?
+10. **(Principle 3)** Does the produced artifact actually fit the 1-week shippable subset declared in the roadmap? If the artifact represents the full long-term design rather than the 1-week subset, that is a Principle 3 violation.
+11. **No invented data.** Every API endpoint, integration name, vendor feature, field name in the artifact must trace to `integration-research.md`, `_uploads/MANIFEST.md`, or a web-search citation in the build notes. Untraceable claims = CRITICAL (invented data).
+12. Does the artifact write only inside `build/{intervention-slug}/`? Files written elsewhere = CRITICAL (scope violation).
+13. Is the result the artifact serves identified? (R# from outcome-map.md, or "operational efficiency only" with rationale)
 
 ## 4. Review Output Format
 

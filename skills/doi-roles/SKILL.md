@@ -44,6 +44,32 @@ Before classifying tasks or decomposing microservices, this phase researches the
 - CAN: Research tool APIs/capabilities, extract tasks, classify automation stages, map LLM functions, apply KOODAR, decompose microservices
 - CANNOT: Score friction (Phase 6), route bottlenecks (Phase 7), recommend implementation order (Phase 9)
 
+### Build Doctrine — read before decomposing microservices
+
+Before any Stage 2-4 microservice decomposition, read the canonical doctrine:
+
+```text
+$DOI_SCRIPTS/_config/3rd-brain-build-principles.md
+```
+
+Two principles bind this phase:
+
+- **Principle 2 — Solo-agent-first for workflows.** The default Stage 3 design is **1 agent + N tools**, not N agents. Agent orchestration is a response to a measured limitation, never a starting point.
+- **Principle 4 — Single agent until proven otherwise.** Decomposing into multiple microservices/agents requires a cited measured bottleneck (latency, quality, or cost). Speculative decomposition is a methodology violation.
+
+**Decomposition rules with the doctrine applied:**
+
+| Stage | Default | Decompose only when |
+|---|---|---|
+| 1 | 0 microservices (no AI) | Never — Stage 1 has no AI component |
+| 2 | 1 microservice | Never — the task IS the microservice |
+| 3 | **1 agent + multiple tools** (treated as 1 microservice with multiple capabilities) | A measured bottleneck forces splitting into 2-5 microservices. Cite the bottleneck in the microservice file. |
+| 4 | **Refused by default.** Re-route to Stage 3 starting point. | Operator explicitly overrides with measured Stage 3 success. If overridden, decompose into 3-8+ microservices. |
+
+If you split a Stage 3 task into >1 microservice, the microservice file MUST include a `## Decomposition Rationale` section citing the measured bottleneck. No bottleneck cited = single-microservice design.
+
+This overrides the older "Stage 3 = 2-5 microservices" rule. Stage 3 = 1 by default; 2-5 only with cited justification.
+
 ### Session Resolution
 
 Standard DOI session resolution.
@@ -127,6 +153,16 @@ Military decision-making cycle applied to task scoping:
 ### Tool/API Research Step (Detail for Step 2)
 
 Read `department.md` for the tools list and `verified-role.md` for the verified tools table. For EACH tool the role actually uses:
+
+**Check `_uploads/tool-exports/` first.** Before web search, scan for client-provided artifacts:
+
+```bash
+$DOI_SCRIPTS/scan-uploads.sh <engagement-folder> tool-exports
+```
+
+Operator-provided exports (Zapier scenario JSON, Make blueprints, n8n workflow exports, CRM field schemas, integration screenshots, API doc PDFs, vendor SOW excerpts) are higher-trust than web search because they reflect the **client's actual instance and configuration** — not the vendor's marketing surface. Mine these first; web search supplements the gaps. For each file ingested, append a row to `_uploads/MANIFEST.md`:
+
+`| _uploads/tool-exports/<file> | 5 | doi-roles | integration-research.md (<tool>) | YYYY-MM-DD |`
 
 **What to research:**
 

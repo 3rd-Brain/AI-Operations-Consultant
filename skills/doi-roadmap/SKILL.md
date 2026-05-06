@@ -40,6 +40,23 @@ Phase 9 of the DOI Method. Planner — the final deliverable. Synthesizes everyt
 - CAN: Prioritize interventions, sequence implementation, project impact, produce the final deliverable
 - CANNOT: Invent new analysis, change prior phase findings, introduce new data not from prior phases
 
+### Build Doctrine — read before sequencing or scoping
+
+Before tier classification or sequencing, read the canonical doctrine:
+
+```text
+$DOI_SCRIPTS/_config/3rd-brain-build-principles.md
+```
+
+Four principles bind this phase:
+
+- **Principle 1 — Frontend-first for apps.** When the intervention is "build an application," the spec must lead with the user-facing surface, not the data model.
+- **Principle 3 — Ship every week.** If a Tier 1 intervention cannot ship in one week, it is not a Tier 1 intervention. Demote it to Tier 2 and split out a 1-week shippable subset that goes back into Tier 1. Every Tier 1 intervention MUST declare its 1-week shippable subset and a concrete demo definition.
+- **Principle 6 — Start with what we have built.** Pull the verified tool list and `_uploads/` artifacts. Every Tier 1-2 intervention names which existing system it builds on, OR explicitly justifies why a new system is necessary. The roadmap MUST include an "Existing Systems to Extend" section.
+- **Principle 7 — Demo before doc + the three architect questions.** Every Tier 1-2 intervention MUST answer: (a) Where does state reside? Name the single component that owns this data. (b) Where is feedback? Name the log/metric/error that proves it works. (c) What breaks if this is deleted? Interventions missing any of the three are demoted to Tier 3 or dropped.
+
+If any Tier 1-2 intervention cannot satisfy these principles, document the violation explicitly with rationale rather than hiding it. The critic surfaces violations for human review but does not block them — undocumented violations, however, are flagged as critical.
+
 ### Session Resolution
 Standard DOI session resolution.
 
@@ -176,8 +193,15 @@ export DOI_REGISTRY="$HOME/.claude/.doi-registry.md"
 
 **Total unaligned capacity:** ~[N] hours/week across [M] roles
 
+## Existing Systems to Extend
+*Per Principle 6 — pulled from verified tool lists and `_uploads/`. Every Tier 1-2 intervention below names which of these it extends, or explicitly justifies why a new system is needed.*
+
+| Existing System | Used By Roles | Capabilities Confirmed (from integration-research.md) | Interventions That Extend It |
+|---|---|---|---|
+| [tool name] | [roles] | [API / integrations / automation features] | [intervention names below] |
+
 ## Tier 1: Quick Wins
-*High impact, low complexity, start immediately. No foundation work required.*
+*High impact, low complexity, start immediately. No foundation work required. Every item ships in **one week**.*
 
 **Projected Friction Tax after Tier 1: [N]%** ([current]% → [projected]%, recovering [N] percentage points)
 
@@ -187,6 +211,19 @@ export DOI_REGISTRY="$HOME/.claude/.doi-registry.md"
 - **Friction recovered:** ~[N] points weighted
 - **Prerequisites:** [None / specific prior interventions]
 - **What to do:** [Specific, actionable steps — not vague]
+- **Result advanced:** [R# — result name, or "operational efficiency only" if intervention addresses an unaligned task]
+- **Existing system extended:** [tool name from "Existing Systems to Extend" / "new — justification: ..."]
+- **1-week shippable subset (Principle 3):** [the smallest version a user can demo end-to-end after week 1]
+- **Demo definition:** [what the operator opens, types, or clicks at the end of week 1 to verify it's working]
+- **Three architect questions (Principle 7):**
+  - State owner: [single component that owns this data]
+  - Feedback signal: [log / metric / error that proves it's working]
+  - Deletion impact: [what breaks if this is removed]
+- **Build doctrine compliance:**
+  - Frontend-first (P1): [N/A for non-app / yes — frontend leads spec / violation: ...]
+  - Solo-agent (P2, P4): [N/A for non-workflow / yes — 1 agent + tools / violation: ...]
+  - ICM before infra (P5): [yes — files / yes — infra justified by: ...]
+  - Extend existing (P6): [extends X / new system, justified by: ...]
 
 ### 2. [Next intervention]
 ...

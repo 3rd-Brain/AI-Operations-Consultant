@@ -40,6 +40,28 @@ Phase 7 of the DOI Method. Diagnostician — classifies what's causing friction 
 - CAN: Classify bottleneck types, route by automation stage, cross-reference maturity gates
 - CANNOT: Build implementation timeline (Phase 9), prioritize interventions (Phase 9), change prior phase data
 
+### Build Doctrine — read before routing Tools interventions
+
+Before routing any Tools-classified bottleneck, read the canonical doctrine:
+
+```text
+$DOI_SCRIPTS/_config/3rd-brain-build-principles.md
+```
+
+Two principles bind this phase:
+
+- **Principle 5 — ICM and folders before infrastructure.** Default Tools interventions to file-based ICM (numbered stages, `CONTEXT.md` contracts, `_config/`, `output/`). Postgres + queues + orchestration frameworks earn their keep only when files measurably fail: concurrent writes from multiple users, aggregations across many records, scale beyond tens of thousands of rows. The fix is never "smaller Postgres schema" — it's "no Postgres until files break."
+- **Principle 6 — Start with what we have built.** Extending an existing system the role already uses always beats introducing a new one when both can address the bottleneck.
+
+**Routing rules with the doctrine applied:**
+
+For every Tools intervention, before specifying it:
+
+1. **File-failure check.** Does the friction data show concurrent writes, aggregation needs, or >10K-row scale? If no, the default intervention is file-based ICM. If yes, document the file-failure mode in the intervention spec before reaching for Postgres/queues/orchestrators.
+2. **Existing-system check.** Pull the verified tool list from `verified-role.md`. Can the bottleneck be addressed by extending one of those tools? If yes, tag the intervention `extend-existing` and name the tool. If no, tag `new-system` and write a one-line justification.
+
+Each Tools intervention in `gap-analysis.md` MUST include both tags (one of `extend-existing` / `new-system`, and one of `files-default` / `infrastructure-justified`). No tags = methodology violation.
+
 ### Session Resolution
 Standard DOI session resolution.
 
