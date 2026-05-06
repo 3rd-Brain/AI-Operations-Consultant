@@ -67,7 +67,28 @@ Before asking anything substantive, resolve which engagement (if any) this is:
 
 ## 3. New Engagement Flow
 
-For a new engagement, the consultant runs in three steps:
+For a new engagement, the consultant runs in four steps.
+
+### Step 3.0 — Pre-Intake Working-Directory Scan
+
+Before invoking intake, see what the operator already has on disk. The engagement folder does not exist yet, so scan the **current working directory** for likely-relevant materials:
+
+```bash
+# Likely-relevant file types only — never scan the whole tree, never auto-grab
+find "$PWD" -maxdepth 2 -type f \
+  \( -iname "*.pdf" -o -iname "*.docx" -o -iname "*.doc" -o -iname "*.md" \
+     -o -iname "*.csv" -o -iname "*.json" -o -iname "*.txt" \
+     -o -iname "*.xlsx" -o -iname "*.pptx" \
+     -o -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) 2>/dev/null
+```
+
+**Rules:**
+- Scan only — do NOT copy or read anything yet.
+- The CWD may be a code repo, a desktop, a downloads folder, or anything else. Never assume relevance.
+- If results are empty, skip silently.
+- If results are non-empty, ask the operator: "I see [N] files in this directory. Are any of these engagement materials I should fold in (org chart, prior assessments, job descriptions, tool exports, etc.)? List the ones that apply, or say 'none'."
+
+If the operator names files, capture the list and pass it to `doi-intake` as a hint. Intake will create `_uploads/general/` (or the appropriate sub-bucket) during workspace init and copy them in. Files the operator did NOT name stay out of the engagement.
 
 ### Step 3.1 — Intake Interview
 
@@ -150,9 +171,10 @@ Every time doi-run is invoked mid-engagement (resume, or returning from a standa
 
 | User goal | Dispatch to |
 |---|---|
-| Full 10-phase engagement | `doi-engage` |
+| Full engagement (analysis + roadmap, optional build) | `doi-engage` |
 | Just the maturity score | `doi-assess` (after intake) |
 | One role, deep dive | `doi-setup` (scoped) → `doi-verify` → `doi-outcomes` → `doi-roles` → `doi-friction` |
 | Pillar readiness check | `doi-pillars` (after intake) |
 | Resume in-progress pipeline | `doi-engage` (reads state, picks up at next phase) |
 | Intake only, no further action | `doi-intake`, then stop |
+| Build artifacts from an existing approved roadmap | `doi-build` (requires Phase 9 complete) |

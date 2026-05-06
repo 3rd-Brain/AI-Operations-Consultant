@@ -62,6 +62,25 @@ The interview runs in **seven sections**, in order. Each section has a minimum s
 
 After each section completes, write the section file (see Section 5 — Output Format) before moving to the next. This way a paused intake keeps the progress it earned.
 
+### Pre-section ritual: scan `_uploads/general/` before each section
+
+Before opening Section 1, call `$DOI_SCRIPTS/init-workspace.sh <engagement-folder>` so `_uploads/general/` exists. If `doi-run` handed you a list of files the operator named in the pre-intake scan, copy them into `_uploads/general/` now.
+
+Before each of the seven sections, run:
+
+```bash
+$DOI_SCRIPTS/scan-uploads.sh <engagement-folder> general
+```
+
+For any file in the listing whose name or content plausibly covers the section's scope (e.g., `org-chart.pdf` for Section 1, prior assessment decks for Section 3, tech inventory spreadsheets for Section 4), read it before asking questions. Then say to the operator: "I see [filename] in your uploads — does that cover [topic], or should I still ask?"
+
+**Rules for upload usage:**
+- Use uploads to inform questions, not replace them. Files capture facts; the interview captures motivation, constraints, and reality.
+- Mark anything inferred from a file (vs. stated by the operator) with `(inferred from <filename>)` in the section files.
+- After ingesting a file, append a row to `_uploads/MANIFEST.md`:
+  - `| _uploads/general/<file> | 0 | doi-intake | <section file>.md | YYYY-MM-DD |`
+- If a file's relevance is unclear, ask before mining it. Do not assume.
+
 At the end of every section, ask: **"Anything else to add before we move on?"** Then: **"Continue to [next section name], or pause here?"**
 
 ### Section 1 — Organization Basics

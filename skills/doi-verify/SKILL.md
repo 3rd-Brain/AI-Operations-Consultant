@@ -124,14 +124,28 @@ Now that you have system data, your questions are sharper. You're not asking "wh
 
 If access to some or all systems is unavailable, follow this fallback chain:
 
-**Fallback 1: Ask for file uploads**
+**Fallback 1: Check `_uploads/`, then ask for more**
 
-For each inaccessible system, use AskUserQuestion to offer the user a chance to provide supporting files:
+Before asking the operator for files, scan the engagement's upload tree for relevant artifacts that may already be there:
 
-> "I wasn't able to connect to [Tool Name]. Do you have any files that show how you use it — exports, reports, screenshots, dashboards, anything? You can upload them now, or we can skip and I'll ask you about it directly."
+```bash
+# Role-scoped exports for the role being verified
+$DOI_SCRIPTS/scan-uploads.sh <engagement-folder> <dept-slug> <role-slug>
 
-If the user provides files:
-- Save them to `departments/{dept-slug}/materials/` and append relevant content to `roles/{role-slug}/materials.md`
+# Tool-wide exports (CRM dumps, integration screenshots, Zapier exports)
+$DOI_SCRIPTS/scan-uploads.sh <engagement-folder> tool-exports
+```
+
+For each file relevant to the inaccessible system, read it and treat it as a supplementary observation source. Append a row to `_uploads/MANIFEST.md`:
+
+`| <file> | 3 | doi-verify | tool-audit.md (<tool name>) | YYYY-MM-DD |`
+
+Only **after** mining `_uploads/`, ask the operator for additional files for whatever gaps remain. Use AskUserQuestion:
+
+> "I wasn't able to connect to [Tool Name] directly. I checked your uploads and found [N files / nothing relevant]. Do you have any other files that show how you use it — exports, reports, screenshots, dashboards? Drop them in `_uploads/{dept-slug}/{role-slug}/` or `_uploads/tool-exports/` and I'll re-scan, or we can skip and I'll ask you about it directly."
+
+If the user provides additional files:
+- Move/copy them into the appropriate `_uploads/` bucket and re-run the scan so the manifest stays accurate
 - Mine the files for the same data points you'd look for in the live system (activity patterns, record counts, field usage, process flows)
 - Use findings to inform your conversational probing in Step 2
 

@@ -79,9 +79,30 @@ Required: `assessments/maturity-assessment.md` must exist.
 #### Materials Gathering
 
 For each role, gather source materials. Accept ANY of:
+- **`_uploads/{dept-slug}/{role-slug}/`** — files the operator pre-staged for this role (job descriptions, SOPs, day-in-life docs, exports). Always check this first.
+- **`_uploads/{dept-slug}/`** — department-scoped files that may apply to multiple roles.
 - **Pasted text** — job descriptions, process docs, daily task lists
 - **Verbal descriptions** — "Tell me what this person does day to day"
 - **File content** — if the user provides file content or references documents
+
+**Upload scan first.** Before asking the operator for materials, run:
+
+```bash
+$DOI_SCRIPTS/scan-uploads.sh <engagement-folder> <dept-slug> <role-slug>
+```
+
+For each file in the listing, read it and append to `materials.md` with a source header that includes the file path:
+
+```markdown
+--- Job Description (uploads: _uploads/marketing/marketing-manager/jd.docx) ---
+[content]
+```
+
+Then append a row to `_uploads/MANIFEST.md`:
+
+`| _uploads/<dept>/<role>/<file> | 2 | doi-setup | departments/<dept>/roles/<role>/materials.md | YYYY-MM-DD |`
+
+After the upload scan, ask: "I pulled [N] files from `_uploads/{dept}/{role}/` into materials. Is there anything else — pasted text, verbal description, or files I should add?"
 
 Save all materials to `roles/{role-slug}/materials.md` with source headers:
 ```markdown

@@ -26,11 +26,42 @@ mkdir -p "$ENGAGEMENT_DIR/assessments"
 mkdir -p "$ENGAGEMENT_DIR/departments"
 mkdir -p "$ENGAGEMENT_DIR/reviews"
 
+# Upload tree — operator drops materials here, skills ingest from here
+mkdir -p "$ENGAGEMENT_DIR/_uploads/general"
+mkdir -p "$ENGAGEMENT_DIR/_uploads/tool-exports"
+
+# Seed MANIFEST.md if it does not exist yet
+MANIFEST="$ENGAGEMENT_DIR/_uploads/MANIFEST.md"
+if [ ! -f "$MANIFEST" ]; then
+    cat > "$MANIFEST" <<'EOF'
+# Uploads Manifest
+
+Provenance ledger for `_uploads/`. Every file ingested by a phase MUST be appended here.
+The critic uses this to verify no invented data — if a phase output cites a fact not
+traceable to either the operator's words or a manifest row, that is a methodology violation.
+
+## Folder Map
+
+- `_uploads/general/` — org-wide materials (org charts, P&Ls, decks, prior assessments)
+- `_uploads/tool-exports/` — CRM dumps, Zapier/Make exports, integration screenshots, API specs
+- `_uploads/{dept-slug}/` — department-scoped materials
+- `_uploads/{dept-slug}/{role-slug}/` — role-scoped materials (job descriptions, SOPs, day-in-life docs)
+
+## Ingestion Log
+
+| File | Phase | Consumed By | Informed | Date |
+|---|---|---|---|---|
+EOF
+fi
+
 # If department specified, create department structure
 if [ -n "$DEPT_SLUG" ]; then
     DEPT_DIR="$ENGAGEMENT_DIR/departments/$DEPT_SLUG"
     mkdir -p "$DEPT_DIR/source-docs"
     mkdir -p "$DEPT_DIR/assessments"
+
+    # Department-scoped upload bucket
+    mkdir -p "$ENGAGEMENT_DIR/_uploads/$DEPT_SLUG"
 
     # If roles specified, create role directories
     for role_slug in "${ROLE_SLUGS[@]}"; do
@@ -38,6 +69,9 @@ if [ -n "$DEPT_SLUG" ]; then
             ROLE_DIR="$DEPT_DIR/roles/$role_slug"
             mkdir -p "$ROLE_DIR/tasks"
             mkdir -p "$ROLE_DIR/microservices"
+
+            # Role-scoped upload bucket
+            mkdir -p "$ENGAGEMENT_DIR/_uploads/$DEPT_SLUG/$role_slug"
         fi
     done
 fi
