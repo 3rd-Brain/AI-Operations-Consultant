@@ -1,265 +1,147 @@
-# Turn Claude Into An AI Operations Consultant
+![version](https://img.shields.io/badge/version-3.0.0-blue) ![license](https://img.shields.io/badge/license-GPL--3.0-blue) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
-**The Digital Operations Institute Method**
+[Methodology](#methodology) · [Examples](#examples) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
 
-Most AI readiness tools give you a questionnaire and a score. DOI gives you a consultant: conversational intake, role verification, outcome mapping, task classification, friction analysis, and a sequenced implementation roadmap.
+# AI Operations Consultant
 
-Built from 50+ client engagements at [3rd Brain](https://3rdbrain.co), DOI is packaged for **Claude Code** and **Claude Cowork**.
+A consultant that produces build specs your coding agent can ship from.
 
-## The Official Experience
-
-DOI is now **plugin-first**.
-
-That means the official install and usage story is:
-- Install DOI as a plugin
-- Run one command everywhere: `/doi-method:doi-run`
-
-If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, nothing was wrong with the methodology itself. Plugin installs are namespaced, so the correct command is:
-
-```text
-/doi-method:doi-run
-```
-
----
-
-## What You Get
-
-| Deliverable | What It Is |
-|---|---|
-| **Maturity Score** | Level 1-5 readiness rating with hard cap gate logic |
-| **Role Reality Check** | Verified gap between documented roles and actual day-to-day work |
-| **Outcome Map** | Solution-agnostic results per role, tagged to every task |
-| **Task Classification** | Every task rated on a 4-stage AI automation scale |
-| **Friction Tax** | % of capacity lost to friction by task, role, and department |
-| **Bottleneck Routing** | People / Process / Tools diagnosis for high-friction work |
-| **Pillar Assessment** | Evidence-backed foundational + advanced readiness scores |
-| **Implementation Roadmap** | Tiered, sequenced plan with projected friction reduction |
-
-This is not a report someone reads and shelves. Every output feeds the next phase.
-
----
-
-## Install
-
-### Claude Code
-
-#### Marketplace install
-
-```text
-/plugin marketplace add 3rd-Brain/AI-Operations-Consultant
-/plugin install doi-method@doi-method
-```
-
-Then run:
-
-```text
-/doi-method:doi-run
-```
-
-#### Local clone install
-
-```bash
-git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
-cd AI-Operations-Consultant
-./install-doi.sh
-```
-
-`./install-doi.sh` now defaults to the **plugin install** path.
-
-Then run:
-
-```text
-/doi-method:doi-run
-```
-
-### Claude Cowork
-
-Upload the repo as a custom plugin, then run:
-
-```text
-/doi-method:doi-run
-```
-
-This is the recommended Cowork path because it includes:
-- the shared DOI scripts
-- the reviewer agent used in the full pipeline
-- the exact same entrypoint and behavior as plugin installs in Claude Code
-
----
+For founders and operators with an automation backlog they haven't shipped. The consultant runs a session and produces a build spec your coding agent can execute against. The conversation you'd otherwise pay a consultant $40K for.
 
 ## Quick Start
 
-Open Claude and type:
-
-```text
-/doi-method:doi-run
+```bash
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cp -r AI-Operations-Consultant/skills/ai-ops ~/.claude/skills/
 ```
 
-The consultant will:
-1. Detect whether this is a new engagement or a resume
-2. Run a consulting-style intake
-3. Ask what you want out of the engagement
-4. Route you to the right path
+Then invoke `/ai-ops` in any Claude Code or Cowork session. Tell it what you're shipping, where to level up, or what needs documenting. Drop in meeting transcripts, recorded calls, walkthroughs, or any existing docs - the consultant pulls vocabulary and context from them directly, so you don't retype what you've already said. It builds out a living company library and produces specs your coding agents or developers can build from.
 
-You do **not** have to run the full pipeline every time.
+## What You Get
 
-After intake, DOI can route you to:
-- **Full engagement**: all phases across departments and roles
-- **Maturity score only**: 30-question assessment
-- **Single-role deep dive**: verification, outcomes, tasks, friction
-- **Pillars snapshot**: evidence-backed readiness scoring
-- **Consultative routing**: describe the situation and let DOI choose the path
+Every session writes to a per-company library you keep and grow over time.
 
----
+- **Company profile** - what you do, who's on the team, what stack you run
+- **Data architecture** - your records mapped across tools, with sources of truth and fragmentation flagged
+- **Workflow SOPs** - step-by-step playbooks any teammate can run
+- **Role docs** - responsibilities by cadence + KOODAR breakdown per seat
+- **Roadmaps** - maturity-progression plan with priority projects and acceptance signals
+- **Build scopes** - executable specs your coding agent can ship from in one sitting
 
-## How To Use It
-
-**Start a new engagement:**
-
-```text
-/doi-method:doi-run
-```
-
-**Resume an engagement:**
-Use the same command again. DOI checks saved state, shows where you left off, and continues.
-
-**Skip the front-door consultant:**
-Advanced users can call namespaced phase skills directly. Example:
-
-```text
-/doi-method:doi-engage
-```
-
-**Pause or stop:**
-Say `pause` or `stop` during the flow. State is saved.
-
-**Human gates:**
-After key phases, DOI shows the work and waits for approval before moving on.
-
----
+Plus auto-captured `decisions/` (significant choices, dated) and `glossary.md` (your business's vocabulary).
 
 ## How It Works
 
-The `doi-run` skill is the consultant front door. In plugin installs, you invoke it as `/doi-method:doi-run`.
+You have a conversation. The consultant dispatches specialists when work benefits from a fresh context window. The deliverables come back as files in a per-company library you own.
 
-```text
-/doi-method:doi-run
-    |
-    +--> doi-intake
-    |        |
-    |        v
-    |    context/ folder + company-profile.md
-    |        |
-    |        v
-    +--> Routing Interview
-             |
-     +-------+---------+------------+---------------+
-     |                 |            |               |
-     v                 v            v               v
- doi-engage       doi-assess    role loop      doi-pillars
- (full pipeline)  (score only)  (one role)     (pillars only)
-     |
-     v
- Phase 1: doi-assess   --> [Critic] --> Gate
- Phase 2: doi-setup
-    |
-    +---- Per Role Loop ----+
-    |  Phase 3: doi-verify   --> [Critic] --> Gate
-    |  Phase 4: doi-outcomes --> [Critic] --> Gate
-    |  Phase 5: doi-roles    --> [Critic] --> Gate
-    |  Phase 6: doi-friction --> [Critic] --> Gate
-    +-----------------------+
-    |
- Phase 7: doi-route    --> [Critic] --> Gate
- Phase 8: doi-pillars  --> [Critic] --> Gate
- Phase 9: doi-roadmap  --> [Critic] --> Gate --> Done
+```
+   user
+    │
+    ▼
+┌─────────────────────────┐
+│  /ai-ops                │   conversational orchestrator
+│  (one skill, one session) │
+└──────────┬──────────────┘
+           │  dispatches specialists in subagents
+           ▼
+┌──────────────────────────────────────────────────────────┐
+│  Workflow chain   Company chain   Role   Roadmap   Build  │
+│  (SOP / tools /   (profile /      Scope                   │
+│   automation)      stack research /                       │
+│                    data arch)                             │
+└──────────┬───────────────────────────────────────────────┘
+           │  writes files to the per-company library
+           ▼
+       <company>/
+         profile.md · data-architecture.md · glossary.md
+         workflows/ · roles/ · tools/
+         decisions/ · roadmaps/ · scopes/
 ```
 
-After each critical phase, an independent **critic agent** reviews the output in isolation before the next phase begins.
+The library is plain markdown so you can read and edit any file directly.
 
----
+## Methodology
 
-## Why This Is Different
+Five frameworks the consultant applies. Source: the Digital Operations Playbook (bundled in the skill at `references/playbook/`).
 
-**It is a consultant, not a questionnaire.** DOI starts with intake, then routes to the path that actually answers the user's question.
+- **5 Levels of Digital Operations** - where you sit on the maturity scale (Information Silos → Connectable Cloud → Unified Data Layer → Automated Workflows → AI Automation). Level 3 is the flywheel threshold.
+- **Three Cs** - Consistency → Clarity → Capacity. The chain reaction you unlock as you level up. Each one is a prerequisite for the next.
+- **5 Pillars** - Talent Strategy, Workflow Optimization, Digital Architecture, Knowledge Management, AI Automation. What you actually build to move the levels.
+- **People → Process → Tools** - the implementation sequence within every pillar. Skip it and you ship shelfware.
+- **KOODAR** - the AI capabilities vocabulary (Know / Observe / Orient / Decide / Act / Review). The language for designing and documenting AI tools and agents.
 
-**It assesses from the inside out.** It works department by department and role by role, not from surface-level assumptions.
+## What to ask for and what the consultant produces.
 
-**It has a critic.** Critical outputs are reviewed independently before the engagement advances.
+| What you say                                           | What you get                                                                                                                                         |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "Map how our business runs"                            | The full picture: a company profile, cross-tool data architecture, and entries for every tool you operate on                                         |
+| "Walk through our quoting workflow"                    | A step-by-step SOP a teammate can follow, plus research on every tool in the workflow and the automation opportunities buried in it                  |
+| "Document the head of sales role"                      | A role doc with responsibilities by cadence, objectives and metrics, and a KOODAR capability breakdown                                               |
+| "Give me a roadmap to get our marketing team AI ready" | A sequenced plan: priority projects, acceptance signals, scope-specific pitfalls, and the library work that needs to happen first                    |
+| "Scope the carrier-quote extractor"                    | A build spec your coding agent can ship from: stack picks, input/output contracts, tool docs and APIs, examples, and test-driven acceptance criteria |
 
-**The intake is real.** Phase 0 is a seven-section consulting interview that grounds every later phase.
+Anything mentioned but not yet in the library - a tool, a role, a workflow - gets a stub file created automatically. The library grows with every session.
 
-**It is built from client work.** This methodology was refined through real consulting engagements, not invented in a vacuum.
+## Compatibility
 
----
+The skill ships as a folder (`skills/ai-ops/`) and a zipped bundle (`dist/cowork/ai-ops.skill`). All five supported runtimes have native skill systems that accept the same SKILL.md + subfolder structure.
 
-## The Framework
+| Agent | Skills directory | Install |
+|---|---|---|
+| **Claude Code** | `~/.claude/skills/` | `cp -r skills/ai-ops ~/.claude/skills/` |
+| **Cowork** | (managed in-app) | Import `dist/cowork/ai-ops.skill` via **Skills → Create skill → Import** |
+| **OpenClaw** | `~/.openclaw/skills/` | `cp -r skills/ai-ops ~/.openclaw/skills/` or `unzip dist/cowork/ai-ops.skill -d ~/.openclaw/skills/` |
+| **Codex CLI** (OpenAI) | `~/.agents/skills/` | `cp -r skills/ai-ops ~/.agents/skills/` or `unzip dist/cowork/ai-ops.skill -d ~/.agents/skills/` |
+| **Hermes** (NousResearch) | `~/.hermes/skills/` | `hermes skills install https://github.com/3rd-Brain/AI-Operations-Consultant/raw/main/dist/cowork/ai-ops.skill` |
 
-**5 Maturity Levels**
-From Information Silos (Level 1) to AI-Driven Automation (Level 5), with hard-cap gate logic to prevent inflated scoring.
+All five read SKILL.md YAML frontmatter (`name`, `description`). The `license` key is Claude Code / Cowork only - silently ignored by the others.
 
-**4-Stage AI Automation Scale**
-Every task is classified from Stage 1 (Rule-Based Workflow) through Stage 4 (AI Coworker).
+For any other Claude or OpenAI-compatible runtime, point it at `skills/ai-ops/SKILL.md` as the system prompt.
 
-**The Three Cs**
-Consistency, Clarity, Capacity. They arrive in sequence.
+## Examples
 
-**People -> Process -> Tools**
-The sequencing principle behind DOI's diagnosis and roadmap.
+### Document an inquiry-to-quote workflow
 
-**Outcome Mapping**
-DOI distinguishes work that serves a defined result from work that is merely habitual, unmeasured, or unaligned.
+> "Walk me through how new event inquiries become signed quotes. We use Good Shuffle, HoneyBook, and Gmail."
 
-The deeper framework and case thinking behind DOI are documented in the [Digital Operations Playbook](https://digitalopsplaybook.com).
+The consultant dispatches the workflow chain. Output:
+- `workflows/inquiry-to-quote.md` - full SOP with steps, tools per step, escalation paths, and an Automation / Agent Potential section
+- `.ai-ops/research/inquiry-to-quote-tools-2026-05-21.md` - API capabilities, native integrations, integration walls
+- Stub files created for any tool / role / record mentioned but not yet in the library
 
----
+### Plan a level-up roadmap for the proposal workflow
 
-## Advanced And Legacy Installs
+> "I want a roadmap for getting our proposal workflow team-shared so any teammate can produce a consistent output. We're at Level 2 today."
 
-These paths still exist, but they are **not** the default public install story.
+The consultant dispatches the Roadmap specialist. Output:
+- `roadmaps/proposal-workflow-team-shared-<date>.md` - operator goal, three Priority projects, two Upcoming projects, acceptance signals, scope-specific pitfalls, next-action library work
 
-### Standalone Claude Code skills
+### Scope a build for the highest-priority automation
 
-If you explicitly want bare `/doi-run` instead of plugin mode:
+After the workflow chain runs, ask:
 
-```bash
-./install-doi.sh --standalone
-```
+> "Scope the carrier-quote PDF extractor. The one from our discussion in /Meetings from yesterday."
 
-Then use:
+The consultant walks stack selection (Python + Pydantic? Make scenario? Existing Airtable? Each slot one question at a time), then dispatches Build Scope. Output:
+- `scopes/carrier-quote-pdf-extractor-<date>.md` - what to build, the chosen stack, input/output contracts, tools and APIs, records read/written, implementation notes, test-driven acceptance criteria
 
-```text
-/doi-run
-```
+Drop the scope into Claude Code, Cowork, or hand to a developer.
 
-### Cowork `.skill` imports
+## Configuration
 
-If you explicitly want direct Cowork skill imports instead of a plugin upload:
+The consultant works out of the box. Per-session things you can tune in conversation:
 
-1. Build or download the `.skill` files from `dist/cowork/`
-2. Import them in Cowork
-3. Use `/doi-run`
+- **Library location** - where your per-company files live (default: a folder you specify when the session opens)
+- **Existing research** - if you've already gathered tool API docs or run prior research, drop the files in `<library>/.ai-ops/research/` and the consultant picks them up
 
-This is an advanced path and is less complete than the plugin install because it does not include the bundled reviewer agent.
+No config file required. The library structure carries everything.
 
-Full install details live in [INSTALL.md](INSTALL.md).
+## Community & Support
 
----
+- **Issues:** [github.com/3rd-Brain/AI-Operations-Consultant/issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
+- **Methodology source:** [digitaloperationsinstitute.com](https://digitaloperationsinstitute.com)
+- **Behind the methodology:** [3rdbrain.co](https://3rdbrain.co) - the consulting firm that built it across 50+ engagements
 
-## Uninstall
+## License
 
-**Claude Code plugin:** `/plugin uninstall doi-method@doi-method`
-
-**Claude Code standalone:** `rm -rf ~/.claude/skills/doi-* ~/.claude/agents/doi-review ~/.claude/scripts/doi/`
-
-**Cowork plugin:** remove DOI from Customize -> Plugins
-
-**Cowork skills:** remove each `doi-*` skill from Skills -> Manage
-
----
-
-## Made by 3rd Brain
-
-DOI Method is designed and maintained by [3rd Brain](https://3rdbrain.co), a digital operations consultancy building AI-native operating systems for growing businesses.
-
-*Licensed under GPL-3.0. Copyright 2026 3rd Brain DigiOps.*
+GPL-3.0 - see [LICENSE](LICENSE).

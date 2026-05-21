@@ -1,27 +1,25 @@
 #!/usr/bin/env python3
 """
-Build Cowork-compatible .skill packages from the DOI Method skills.
+Build Cowork-compatible .skill packages from the AI Operations Consultant skills.
 
 Cowork's skill validator (plugin:anthropic-skills:skill-creator) only allows
 these SKILL.md frontmatter properties:
     name, description, license, allowed-tools, metadata, compatibility
 
-Our skills have `user-invocable: true` (required by Claude Code CLI for slash
-invocation) which Cowork rejects as an unexpected property. Cowork skill
-imports also need the shared DOI shell scripts that the skills call at runtime.
-This script copies each skill to a staging dir, strips the `user-invocable`
-line, bundles `scripts/*.sh` under `scripts/doi/`, then zips the result as
-`<skill>.skill` (Cowork's distributable format - it's just a zip).
+This script copies each skill directory to a staging dir, strips any
+frontmatter keys outside that set (defensive — V2 already only uses allowed
+keys), then zips the result as `<skill>.skill` (Cowork's distributable format —
+just a zip).
 
-Claude Code CLI users install via the marketplace or `./install-doi.sh` - this
-script is only for Cowork distribution.
+Claude Code CLI users install via the marketplace; this script exists for
+Cowork distribution.
 
 Usage:
     python scripts/build-cowork-skills.py
     python scripts/build-cowork-skills.py --output dist/cowork
-    python scripts/build-cowork-skills.py --skill doi-run    # single skill
+    python scripts/build-cowork-skills.py --skill ai-ops    # single skill
 
-Output: dist/cowork/doi-*.skill (one per skill, each self-contained)
+Output: dist/cowork/<skill>.skill (one per skill, each self-contained)
 """
 
 import argparse
@@ -69,7 +67,6 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
     skip_nested = False
 
     for line in lines:
-        # Top-level key match: no leading whitespace, `key:` or `key: value`
         top_level = re.match(r'^([a-zA-Z0-9_-]+):', line)
         if top_level:
             key = top_level.group(1)
@@ -80,7 +77,6 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
             skip_nested = False
             new_lines.append(line)
         else:
-            # Indented / continuation line - keep only if we're not in a skipped block
             if not skip_nested:
                 new_lines.append(line)
 
@@ -88,23 +84,7 @@ def strip_incompatible_frontmatter(skill_md_text: str) -> tuple[str, list[str]]:
     return f"{opener}{new_frontmatter}{closer}{body}", removed
 
 
-def bundle_shared_scripts(repo_root: Path, staging: Path) -> int:
-    """Copy shared DOI shell scripts into the staged Cowork skill package."""
-    scripts_root = repo_root / 'scripts'
-    shared_scripts = sorted(scripts_root.glob('*.sh'))
-    if not shared_scripts:
-        return 0
-
-    bundle_root = staging / 'scripts' / 'doi'
-    bundle_root.mkdir(parents=True, exist_ok=True)
-
-    for script_path in shared_scripts:
-        shutil.copy2(script_path, bundle_root / script_path.name)
-
-    return len(shared_scripts)
-
-
-def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> Path | None:
+def build_skill_package(skill_dir: Path, output_dir: Path) -> Path | None:
     skill_name = skill_dir.name
     print(f"\n[{skill_name}]")
 
@@ -116,7 +96,6 @@ def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> P
         staging = Path(tmp) / skill_name
         shutil.copytree(skill_dir, staging)
 
-        # Rewrite SKILL.md
         skill_md = staging / 'SKILL.md'
         original = skill_md.read_text(encoding='utf-8')
         patched, removed = strip_incompatible_frontmatter(original)
@@ -126,13 +105,6 @@ def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> P
         else:
             print('  No frontmatter changes needed')
 
-        bundled_scripts = bundle_shared_scripts(repo_root, staging)
-        if bundled_scripts:
-            print(f"  Bundled {bundled_scripts} shared DOI script(s)")
-        else:
-            print('  WARNING: No shared DOI scripts found to bundle')
-
-        # Zip it
         output_dir.mkdir(parents=True, exist_ok=True)
         out_path = output_dir / f"{skill_name}.skill"
         files_added = 0
@@ -152,7 +124,7 @@ def build_skill_package(skill_dir: Path, output_dir: Path, repo_root: Path) -> P
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--output', default='dist/cowork', help='Output directory (default: dist/cowork)')
-    parser.add_argument('--skill', help='Only package this one skill (e.g. doi-run)')
+    parser.add_argument('--skill', help='Only package this one skill (e.g. ai-ops)')
     parser.add_argument('--skills-dir', default='skills', help='Source skills directory (default: skills)')
     args = parser.parse_args()
 
@@ -170,10 +142,14 @@ def main():
             print(f"ERROR: skill not found: {targets[0]}")
             sys.exit(1)
     else:
-        targets = sorted(p for p in skills_root.iterdir() if p.is_dir() and p.name.startswith('doi-'))
+        targets = sorted(p for p in skills_root.iterdir() if p.is_dir())
+
+    if not targets:
+        print(f"ERROR: no skills found in {skills_root}")
+        sys.exit(1)
 
     print(f"Building {len(targets)} Cowork skill package(s) to {output_dir}")
-    results = [build_skill_package(t, output_dir, repo_root) for t in targets]
+    results = [build_skill_package(t, output_dir) for t in targets]
     failed = [t for t, r in zip(targets, results) if r is None]
 
     print("\n" + "=" * 60)
