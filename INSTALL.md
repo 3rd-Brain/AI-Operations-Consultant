@@ -4,12 +4,12 @@ DOI is now **plugin-first**.
 
 The official install and usage story is:
 - Install DOI as a plugin
-- Run `/doi-method:doi-run`
+- Run `/doi-method:ai-ops`
 
-If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, that is expected for a plugin install. Plugin commands are namespaced, so the correct command is:
+If you uploaded DOI as a plugin and saw `Unknown command: /ai-ops`, that is expected for a plugin install. Plugin commands are namespaced, so the correct command is:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ## Official Install Paths
@@ -24,7 +24,7 @@ If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, that is exp
 Then run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ### Claude Code: local clone plugin install
@@ -40,7 +40,7 @@ cd AI-Operations-Consultant
 Then run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ### Cowork: custom plugin upload
@@ -50,7 +50,7 @@ Then run:
 3. Run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 This is the recommended Cowork install because it includes:
@@ -63,7 +63,7 @@ This is the recommended Cowork install because it includes:
 For the official install paths above, the command should always be:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ## Advanced And Legacy Paths
@@ -72,7 +72,7 @@ These still work, but they are not the primary install story.
 
 ### Standalone Claude Code skills
 
-Use this only if you explicitly want bare `/doi-run` instead of the plugin namespace.
+Use this only if you explicitly want bare `/ai-ops` instead of the plugin namespace.
 
 ```bash
 ./install-doi.sh --standalone
@@ -81,7 +81,7 @@ Use this only if you explicitly want bare `/doi-run` instead of the plugin names
 Then run:
 
 ```text
-/doi-run
+/ai-ops
 ```
 
 This copies:
@@ -99,7 +99,7 @@ Use this only if you explicitly want direct skill imports instead of a plugin up
 4. Run:
 
 ```text
-/doi-run
+/ai-ops
 ```
 
 Notes:

@@ -12,12 +12,12 @@ DOI is now **plugin-first**.
 
 That means the official install and usage story is:
 - Install DOI as a plugin
-- Run one command everywhere: `/doi-method:doi-run`
+- Run one command everywhere: `/doi-method:ai-ops`
 
-If you uploaded DOI as a plugin and saw `Unknown command: /doi-run`, nothing was wrong with the methodology itself. Plugin installs are namespaced, so the correct command is:
+If you uploaded DOI as a plugin and saw `Unknown command: /ai-ops`, nothing was wrong with the methodology itself. Plugin installs are namespaced, so the correct command is:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ---
@@ -53,7 +53,7 @@ This is not a report someone reads and shelves. Every output feeds the next phas
 Then run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 #### Local clone install
@@ -69,7 +69,7 @@ cd AI-Operations-Consultant
 Then run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 ### Claude Cowork
@@ -77,7 +77,7 @@ Then run:
 Upload the repo as a custom plugin, then run:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 This is the recommended Cowork path because it includes:
@@ -92,7 +92,7 @@ This is the recommended Cowork path because it includes:
 Open Claude and type:
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 The consultant will:
@@ -117,7 +117,7 @@ After intake, DOI can route you to:
 **Start a new engagement:**
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
 ```
 
 **Resume an engagement:**
@@ -140,10 +140,10 @@ After key phases, DOI shows the work and waits for approval before moving on.
 
 ## How It Works
 
-The `doi-run` skill is the consultant front door. In plugin installs, you invoke it as `/doi-method:doi-run`.
+The `ai-ops` skill is the consultant front door. In plugin installs, you invoke it as `/doi-method:ai-ops`.
 
 ```text
-/doi-method:doi-run
+/doi-method:ai-ops
     |
     +--> doi-intake
     |        |
@@ -220,7 +220,7 @@ These paths still exist, but they are **not** the default public install story.
 
 ### Standalone Claude Code skills
 
-If you explicitly want bare `/doi-run` instead of plugin mode:
+If you explicitly want bare `/ai-ops` instead of plugin mode:
 
 ```bash
 ./install-doi.sh --standalone
@@ -229,7 +229,7 @@ If you explicitly want bare `/doi-run` instead of plugin mode:
 Then use:
 
 ```text
-/doi-run
+/ai-ops
 ```
 
 ### Cowork `.skill` imports
@@ -238,7 +238,7 @@ If you explicitly want direct Cowork skill imports instead of a plugin upload:
 
 1. Build or download the `.skill` files from `dist/cowork/`
 2. Import them in Cowork
-3. Use `/doi-run`
+3. Use `/ai-ops`
 
 This is an advanced path and is less complete than the plugin install because it does not include the bundled reviewer agent.
 

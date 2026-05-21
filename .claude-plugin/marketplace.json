@@ -8,8 +8,8 @@
   "plugins": [
     {
       "name": "doi-method",
-      "description": "Digital Operations Institute — AI/automation readiness assessment methodology for Claude Code",
-      "version": "2.0.0",
+      "description": "AI Operations Consultant — single-skill conversational consultant for documenting, diagnosing, and automating digital operations",
+      "version": "3.0.0",
       "source": "./",
       "category": "operations",
       "tags": ["assessment", "automation", "ai-readiness", "digital-operations", "maturity"],

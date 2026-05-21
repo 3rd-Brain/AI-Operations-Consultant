@@ -1,7 +1,7 @@
 {
   "name": "doi-method",
-  "version": "2.0.0",
-  "description": "Digital Operations Institute — AI/automation readiness assessment methodology for Claude Code and Cowork",
+  "version": "3.0.0",
+  "description": "AI Operations Consultant — single-skill conversational consultant for documenting, diagnosing, and automating digital operations",
   "author": {
     "name": "3rd Brain DigiOps",
     "url": "https://github.com/3rd-Brain/AI-Operations-Consultant"
