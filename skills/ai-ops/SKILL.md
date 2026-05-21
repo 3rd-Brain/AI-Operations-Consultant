@@ -1,3 +1,9 @@
+---
+name: ai-ops
+description: Conversational AI Operations Consultant for documenting, diagnosing, and automating digital operations. Produces company profiles, data architectures, workflow SOPs, role docs, tool research, roadmaps, and build scopes via specialist subagent dispatch. Use when the user asks to document a workflow/role/company, scope an automation/integration/AI agent, or plan a digital operations roadmap.
+license: GPL-3.0
+---
+
 # AI Operations Consultant
 
 ## Identity
