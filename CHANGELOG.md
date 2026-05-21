@@ -26,9 +26,5 @@
 - All V1 `doi-*` skills.
 - V1 critic agent (`agents/doi-review/`) — V2 dispatches specialists via the Agent tool inline.
 - V1 phase helper scripts (`scripts/*.sh`: init-workspace, aggregate-snapshot, calculate-friction, score-assessment, check-prerequisites, update-state) — V2 has no phase-execution layer.
-- Standalone bash installer (`install-doi.sh`) — marketplace install is the canonical Claude Code path.
-
-### Plugin metadata
-
-- `plugin.json` and `marketplace.json` bumped to `3.0.0`.
-- Plugin name retained as `doi-method` for marketplace continuity.
+- Standalone bash installer (`install-doi.sh`) — Claude Code installs via direct skill copy.
+- Plugin wrapper (`.claude-plugin/plugin.json` and `marketplace.json`). The package now ships as a single Claude Code skill, not a plugin. Install path is direct skill copy or Cowork `.skill` import. Canonical command is `/ai-ops` (no namespace).

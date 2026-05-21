@@ -1,42 +1,28 @@
 # Installing the AI Operations Consultant
 
-Two supported install paths: Claude Code (via marketplace) and Cowork (via direct `.skill` import or custom plugin upload).
+The skill ships as plain markdown. Two supported install paths: Claude Code (skill copy) and Cowork (`.skill` import).
 
-## Claude Code — marketplace plugin
+## Claude Code
 
-```text
-/plugin marketplace add 3rd-Brain/AI-Operations-Consultant
-/plugin install doi-method@doi-method
+```bash
+git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+cp -r AI-Operations-Consultant/skills/ai-ops ~/.claude/skills/
 ```
 
-Then run:
+Then invoke `/ai-ops` in any Claude Code session.
 
-```text
-/doi-method:ai-ops
-```
+To update: `cd AI-Operations-Consultant && git pull && cp -r skills/ai-ops ~/.claude/skills/`.
 
-## Cowork — direct .skill import
+## Cowork
 
-1. Download `dist/cowork/ai-ops.skill` from this repo
-2. In Cowork, go to **Skills → Create skill → Import from `.skill` file**
+1. Download `dist/cowork/ai-ops.skill` from [releases](https://github.com/3rd-Brain/AI-Operations-Consultant/releases) or this repo
+2. In Cowork: **Skills → Create skill → Import from `.skill` file**
 3. Upload `ai-ops.skill`
-4. Run:
+4. Invoke `/ai-ops`
 
-```text
-/ai-ops
-```
+## Other coding agents (OpenClaw, Codex, Hermes)
 
-## Cowork — custom plugin upload
-
-For teams that prefer the namespaced plugin model in Cowork:
-
-1. Download or zip the repo
-2. Upload it in Cowork as a custom plugin
-3. Run:
-
-```text
-/doi-method:ai-ops
-```
+The skill is markdown. Copy `skills/ai-ops/` into the agent's skills directory, or point the agent at `skills/ai-ops/SKILL.md` as its system prompt.
 
 ## Rebuild the Cowork bundle
 
@@ -50,8 +36,6 @@ Output: `dist/cowork/ai-ops.skill`
 
 ## Uninstall
 
-**Claude Code plugin:** `/plugin uninstall doi-method@doi-method`
+**Claude Code:** `rm -rf ~/.claude/skills/ai-ops`
 
-**Cowork plugin:** remove from Customize → Plugins
-
-**Cowork skill:** remove `ai-ops` from Skills → Manage
+**Cowork:** remove `ai-ops` from Skills → Manage
