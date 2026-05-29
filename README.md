@@ -40,7 +40,7 @@ You have a conversation. The consultant dispatches specialists when work benefit
     ▼
 ┌─────────────────────────┐
 │  /ai-ops                │   conversational orchestrator
-│  (one skill, one session) │
+│(one skill, one session) │
 └──────────┬──────────────┘
            │  dispatches specialists in subagents
            ▼
