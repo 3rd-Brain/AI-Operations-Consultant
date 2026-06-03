@@ -335,6 +335,17 @@ Every engagement writes to a per-company (or department) library in the user's w
 
 When creating library files, use the templates at `templates/`. Each top-level file type has a corresponding template: `profile.md`, `role.md`, `workflow.md`, `tool.md`, `glossary.md`.
 
+### Navigator (visual review UI)
+
+When the operator wants to *see* the whole library — review it, edit it, hand it to their team, or grade maturity and priorities — launch the local navigator pointed at their library:
+
+```bash
+ROOT="{{output_root}}" node "${CLAUDE_PLUGIN_ROOT:-.}/scripts/navigator/server.mjs" --port 4173
+# then share http://localhost:4173
+```
+
+It renders the library as a wiki + dashboard, an org chart (from each role's `Reports to`), and color-coded workflow step-maps (from each workflow's `## SOP`), and writes framework grades to `{{output_root}}/.ai-ops/navigator-grades.json`. It reads and writes the same library files — no separate data store. Localhost only; `.md` writes only. See `scripts/navigator/README.md`.
+
 ## Specialist Dispatch
 
 When a task benefits from focused analysis or a fresh context window, dispatch a subagent using a prompt template from `prompts/`. Fill in the template variables with the user's context and library content, then dispatch. The user sees results, not routing.
