@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI-Ops Navigator</title>
+<link rel="stylesheet" href="/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+  window.__mermaid = mermaid;
+</script>
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="brand">AI-Ops <span id="rootName"></span></div>
+    <nav class="nav-top">
+      <a class="nav-link" data-route="dashboard">🏠 Dashboard</a>
+      <a class="nav-link" data-route="org">👥 Org &amp; Roles</a>
+      <a class="nav-link" data-route="flows">🔀 Workflow Maps</a>
+    </nav>
+    <div id="tree"></div>
+  </aside>
+
+  <main id="main">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="route"></section>
+
+    <!-- ORG & ROLES -->
+    <section id="view-org" class="route" hidden></section>
+
+    <!-- WORKFLOW MAPS -->
+    <section id="view-flows" class="route" hidden>
+      <div class="flows-head">
+        <h1>Workflow Maps</h1>
+        <div class="sub">Each workflow as a step-by-step flow, color-coded by role and tool. Click any role/tool chip to open its page.</div>
+        <div class="flow-picker" id="flowPicker"></div>
+      </div>
+      <div id="flowLegend" class="flow-legend"></div>
+      <div id="flowBody"></div>
+    </section>
+
+    <!-- PAGE (rendered wiki page) -->
+    <section id="view-page" class="route" hidden>
+      <div class="page-head">
+        <div class="ph-crumbs" id="phCrumbs"></div>
+        <h1 id="phTitle"></h1>
+        <div class="ph-meta">
+          <span class="ph-path" id="phPath"></span>
+          <span id="phChips" class="ph-chips"></span>
+        </div>
+        <div class="ph-actions">
+          <button id="btnRead" class="seg active">Read</button>
+          <button id="btnEdit" class="seg">Edit</button>
+          <button id="btnGrade" class="ghost">Grade ▾</button>
+          <button id="btnSave" class="primary" hidden disabled>Save</button>
+          <span id="saveState" class="save-state"></span>
+        </div>
+      </div>
+      <div id="gradePanel" class="grade-panel" hidden></div>
+      <article id="pageRender" class="markdown"></article>
+      <textarea id="pageEdit" spellcheck="false" hidden></textarea>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
