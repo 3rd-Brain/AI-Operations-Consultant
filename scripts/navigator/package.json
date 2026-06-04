@@ -1,0 +1,10 @@
+{
+  "name": "ai-ops-navigator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local visual navigator for an AI-Ops engagement workspace: browse, edit, map connections, and grade against the AI-Ops frameworks.",
+  "license": "GPL-3.0",
+  "bin": { "ai-ops-navigator": "server.mjs" },
+  "scripts": { "start": "node server.mjs" }
+}
