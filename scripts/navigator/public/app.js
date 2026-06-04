@@ -92,14 +92,24 @@ function go(route) {
 }
 
 // ---- sidebar tree ----------------------------------------------------------
+const CREATABLE = ['roles', 'tools', 'workflows', 'decisions', 'scopes', 'roadmaps'];
 function renderTree() {
   const tree = $('#tree'); tree.innerHTML = '';
   const groups = {}; S.graph.nodes.forEach((n) => (groups[n.category] ||= []).push(n));
-  for (const cat of CAT_ORDER) {
-    if (!groups[cat]) continue;
-    const g = document.createElement('div'); g.className = 'tree-group';
-    g.innerHTML = `<div class="grp-label">${cat}</div>`;
-    groups[cat].sort((a, b) => a.label.localeCompare(b.label)).forEach((n) => {
+  const cats = CAT_ORDER.filter((c) => groups[c] || CREATABLE.includes(c)); // show creatable cats even when empty
+  for (const cat of cats) {
+    const g = document.createElement('div'); g.className = 'tree-group'; g.dataset.cat = cat;
+    const label = document.createElement('div'); label.className = 'grp-label';
+    label.innerHTML = `<span>${cat}</span>`;
+    if (CREATABLE.includes(cat)) {
+      const add = document.createElement('button');
+      add.className = 'grp-add'; add.type = 'button'; add.textContent = '+';
+      add.title = `New ${cat.replace(/s$/, '')}`;
+      add.addEventListener('click', (e) => { e.stopPropagation(); startInlineCreate(cat, g); });
+      label.append(add);
+    }
+    g.append(label);
+    (groups[cat] || []).sort((a, b) => a.label.localeCompare(b.label)).forEach((n) => {
       const item = document.createElement('div');
       item.className = 'tree-item' + (n.stub ? ' stub' : ''); item.dataset.id = n.id;
       item.innerHTML = `<span class="dot" style="background:${nodeColor(n)}"></span><span class="nm">${esc(n.label)}</span>` +
@@ -109,6 +119,30 @@ function renderTree() {
     });
     tree.append(g);
   }
+}
+// inline "new page" row under a section heading (no modal)
+function startInlineCreate(cat, groupEl) {
+  const existing = groupEl.querySelector('.tree-create-row input');
+  if (existing) { existing.focus(); return; }
+  const row = document.createElement('div'); row.className = 'tree-create-row';
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.autocomplete = 'off'; inp.placeholder = `New ${cat.replace(/s$/, '')} title…`;
+  row.append(inp);
+  groupEl.insertBefore(row, groupEl.children[1] || null);
+  inp.focus();
+  let done = false;
+  const cancel = () => { if (done) return; done = true; row.remove(); };
+  inp.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      const title = inp.value.trim(); if (!title) { cancel(); return; }
+      done = true; inp.disabled = true;
+      try {
+        const r = await api('/api/new', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category: cat, title }) });
+        await refreshGraph(); toast(`Created ${r.path}`); openPage(r.path);
+      } catch (err) { toast(err.message || 'Create failed'); renderTree(); }
+    } else if (e.key === 'Escape') { cancel(); }
+  });
+  inp.addEventListener('blur', () => setTimeout(cancel, 120));
 }
 
 // ---- dashboard -------------------------------------------------------------
@@ -124,7 +158,7 @@ async function renderDashboard() {
   root.innerHTML = `
     <div class="dash-hero">
       <h1>${esc(S.graph.root)} <span style="color:var(--muted);font-weight:400;font-size:18px">· AI-Ops workspace</span></h1>
-      <div class="sub">Read, edit, and grade the company library against the DOI frameworks.</div>
+      <div class="sub">Read, edit, and grade the company library against the AI-Ops frameworks.</div>
       <p class="dash-lead" id="dashLead"></p>
     </div>
     <div class="cards">
@@ -281,7 +315,6 @@ async function openPage(id) {
   setMode('read');
   $('#pageEdit').value = data.content; $('#pageRender').innerHTML = marked.parse(data.content);
   wikifyLinks($('#pageRender'), id); renderMermaidBlocks($('#pageRender'));
-  renderGradePanel(node); $('#gradePanel').hidden = true; $('#btnGrade').classList.remove('on');
   $('#saveState').textContent = ''; $('#saveState').className = 'save-state'; $('#main').scrollTop = 0;
 }
 function gradeChips(node) {
@@ -324,29 +357,9 @@ async function renderMermaidBlocks(container) {
     code.closest('pre').replaceWith(div);
   }
 }
-// ---- grade panel -----------------------------------------------------------
-function renderGradePanel(node) {
-  const schema = SCHEMAS[node.category] || SCHEMAS._default, g = node.grade || {}, panel = $('#gradePanel');
-  panel.innerHTML = `<div class="gp-title">Grade — ${node.category} frameworks</div>`;
-  for (const f of schema) {
-    const wrap = document.createElement('div'); wrap.className = 'gfield';
-    wrap.innerHTML = `<label>${f.label}</label>`;
-    const sel = document.createElement('select');
-    sel.innerHTML = `<option value="">—</option>` + f.opts.map((o) => `<option ${g[f.key] === o ? 'selected' : ''}>${o}</option>`).join('');
-    sel.addEventListener('change', () => saveGrade(node, f.key, sel.value));
-    wrap.append(sel); panel.append(wrap);
-  }
-  const nf = document.createElement('div'); nf.className = 'gfield'; nf.innerHTML = '<label>Notes</label>';
-  const inp = document.createElement('input'); inp.className = 'notes'; inp.value = g.notes || ''; inp.placeholder = 'notes…';
-  inp.addEventListener('change', () => saveGrade(node, 'notes', inp.value)); nf.append(inp); panel.append(nf);
-}
-async function saveGrade(node, key, value) {
-  const grade = { ...(node.grade || {}) }; if (value === '') delete grade[key]; else grade[key] = value;
-  node.grade = Object.keys(grade).length ? grade : null;
-  await api('/api/grades', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: node.id, grade: node.grade }) });
-  $('#phChips').innerHTML = gradeChips(node); renderTree(); $$('.tree-item').forEach((t) => t.classList.toggle('active', t.dataset.id === node.id));
-  $('#saveState').textContent = 'Grade saved'; $('#saveState').className = 'save-state saved';
-}
+// Grades are display-only here (chips on the page header + dashboard/map colors).
+// They are written by the ai-ops consultant to .ai-ops/navigator-grades.json.
+
 // ---- save file -------------------------------------------------------------
 async function saveFile() {
   const id = S.current; if (!id) return;
@@ -361,14 +374,24 @@ async function saveFile() {
   $$('.tree-item').forEach((t) => t.classList.toggle('active', t.dataset.id === id));
   $('#saveState').textContent = 'Saved'; $('#saveState').className = 'save-state saved';
 }
+// ---- toast -----------------------------------------------------------------
+let _toastT;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  requestAnimationFrame(() => t.classList.add('show'));
+  clearTimeout(_toastT);
+  _toastT = setTimeout(() => { t.classList.remove('show'); setTimeout(() => (t.hidden = true), 300); }, 4600);
+}
+
 // ---- UI wiring -------------------------------------------------------------
 function wireUI() {
-  $$('.nav-link').forEach((l) => l.addEventListener('click', () => go(l.dataset.route)));
+  $$('.nav-link').forEach((l) => { if (l.dataset.route) l.addEventListener('click', () => go(l.dataset.route)); });
   $('#btnRead').addEventListener('click', () => setMode('read'));
   $('#btnEdit').addEventListener('click', () => setMode('edit'));
   $('#btnSave').addEventListener('click', saveFile);
-  $('#btnGrade').addEventListener('click', () => { const p = $('#gradePanel'); p.hidden = !p.hidden; $('#btnGrade').classList.toggle('on', !p.hidden); });
   $('#pageEdit').addEventListener('input', () => { S.dirty = true; $('#btnSave').disabled = false; $('#saveState').textContent = 'Unsaved changes'; $('#saveState').className = 'save-state dirty'; });
-  window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); if (S.route === 'page' && !$('#btnSave').disabled) saveFile(); } });
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); if (S.route === 'page' && !$('#btnSave').disabled) saveFile(); }
+  });
   window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
 }

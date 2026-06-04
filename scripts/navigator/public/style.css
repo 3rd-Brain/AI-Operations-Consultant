@@ -180,6 +180,31 @@ body {
 .flow-empty { color: var(--muted); background: var(--panel); border: 1px dashed var(--border); border-radius: 10px; padding: 18px; }
 .flow-empty code { background: var(--panel-2); padding: 1px 6px; border-radius: 5px; font-family: var(--mono); font-size: .9em; color: var(--ink); }
 
+/* ---------- section "+" add, inline create row, enrich/interview, toast ---------- */
+.grp-label { display: flex; align-items: center; justify-content: space-between; }
+.grp-add {
+  background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 6px;
+  width: 20px; height: 20px; line-height: 1; font-size: 15px; cursor: pointer; padding: 0; flex: none;
+  display: grid; place-items: center;
+}
+.grp-add:hover { color: var(--good); border-color: var(--good); background: var(--panel-2); }
+.tree-create-row { padding: 4px 12px 6px 18px; }
+.tree-create-row input {
+  width: 100%; background: var(--bg); color: var(--ink); border: 1px solid var(--accent);
+  border-radius: 7px; padding: 6px 9px; font-size: 13px; font-family: var(--sans); outline: none;
+}
+.ph-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
+#btnEnrich, #btnInterview { border-color: var(--border); }
+#btnEnrich:hover, #btnInterview:hover { border-color: var(--accent); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 12px);
+  background: var(--panel-2); color: var(--ink); border: 1px solid var(--border);
+  border-left: 3px solid var(--good); border-radius: 10px; padding: 12px 18px; max-width: 560px;
+  font-size: 13.5px; box-shadow: 0 10px 30px rgba(0,0,0,.45); opacity: 0; transition: opacity .25s, transform .25s; z-index: 60;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
 /* ---------- markdown ---------- */
 .markdown { line-height: 1.7; }
 .markdown > *:first-child { margin-top: 6px; }

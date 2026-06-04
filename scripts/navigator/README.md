@@ -1,10 +1,14 @@
 # Navigator
 
 A local **wiki + dashboard** over an AI-Ops engagement library — the visual companion
-to the `ai-ops` skill. Read the library as rendered pages, edit any `.md` in place, see
-the org chart and per-workflow step maps, and grade each page against the AI-Ops
-frameworks. Zero npm dependencies — Node built-ins only (Mermaid + marked load from CDN,
-so first paint needs internet).
+to the `ai-ops` skill. Read the library as rendered pages, edit any `.md` in place,
+create new stub pages from templates, and see the org chart and per-workflow step maps.
+Grades (set by the `ai-ops` consultant) display as chips + dashboard/map colors. Zero npm
+dependencies — Node built-ins only (Mermaid + marked load from CDN, so first paint needs
+internet).
+
+Division of labor: the **navigator** visualizes, edits, and creates stubs; **Claude Code**
+(the `ai-ops` consultant) does the enriching, interviewing, and grading.
 
 The `ai-ops` skill launches this for the operator; it can also be run standalone.
 
@@ -30,7 +34,8 @@ are writable. Stop with Ctrl-C.
 | **🏠 Dashboard** | Maturity level, binding C, People→Process→Tools lever, 5-pillar readiness, workflows by P0/P1/P2, library completeness, and top pains — generated live from the files + grades. |
 | **👥 Org & Roles** | Org chart from each role's `**Reports to:**`, with workflows owned per role (from each workflow's `**Owner role:**`) and a by-department roll-up. |
 | **🔀 Workflow Maps** | Each workflow as a step flow, color-coded by role and tool, with decision branches and exception paths. |
-| **📄 Pages** | Every `.md` as a rendered page (mermaid blocks render as live diagrams), with a Read/Edit toggle that saves to disk and a framework grade panel. |
+| **📄 Pages** | Every `.md` as a rendered page (mermaid blocks render as live diagrams), with a Read/Edit toggle that saves to disk. Grade chips show under the title. |
+| **➕ New** | A `+` on each creatable section heading (roles / tools / workflows / decisions / scopes / roadmaps) drops an inline title field and writes a new stub from a built-in template. |
 
 ## Conventions it reads
 
@@ -45,9 +50,10 @@ are writable. Stop with Ctrl-C.
   (or `[exception]`) marks an exception path.
 - **System map** — a ` ```mermaid ` block in `data-architecture.md` renders as the diagram.
 
-## Grading
+## Grading (display-only)
 
-Grades persist to `<ROOT>/.ai-ops/navigator-grades.json`. The form adapts to the page's
-category: company profile (Maturity 1–5 · binding C · lever · 5-pillar readiness),
-workflows (Priority · KOODAR target · 4-Stage AI · friction · status), roles/tools
-(readiness · status). Changing a grade updates the chips, sidebar, dashboard, and maps live.
+Grades are **read here, not edited**. The `ai-ops` consultant writes them to
+`<ROOT>/.ai-ops/navigator-grades.json`; the navigator surfaces them as page chips, the
+dashboard maturity/priority cards, and node colors on the maps. Schema by category:
+company profile (Maturity 1–5 · binding C · lever · 5-pillar readiness), workflows
+(Priority · KOODAR target · 4-Stage AI · friction · status), roles/tools (readiness · status).
