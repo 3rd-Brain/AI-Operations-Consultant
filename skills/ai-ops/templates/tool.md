@@ -6,8 +6,9 @@ Created by the AI Ops Consultant V2 when a tool needs expansion beyond
 its one-line entry in profile.md → Stack.
 Lives at tools/<tool-slug>.md in the company library.
 
-Sibling files referenced inline:
-  - data-sources/<source-slug>.md
+Records owned/touched by this tool are documented inline in the
+"## Records in this tool" section below. The cross-tool registry lives at
+data-architecture.md. There is no data-sources/ folder in V2.
 -->
 
 **Website:** <url>

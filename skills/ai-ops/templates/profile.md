@@ -10,7 +10,7 @@ This is the user-facing summary. Sibling files in the library expand:
   - roles/<role-slug>.md
   - workflows/<workflow-slug>.md
   - tools/<tool-slug>.md
-  - records/<record-slug>.md
+  - data-architecture.md (cross-tool record registry — records have no standalone files in V2)
   - .ai-ops/pains-and-bottlenecks.md (AI-prioritized goals/problems)
 
 No duplication: profile.md holds CORE info; siblings hold expansion only.
@@ -41,11 +41,11 @@ No duplication: profile.md holds CORE info; siblings hold expansion only.
 - **<Tool name>** — <what it's used for> → [<tool-slug>.md](tools/<tool-slug>.md)
 - **<Tool name>** — <what it's used for>
 
-## Records
+## Key records
 
-<The record types this business operates on. One line per type. Pointer to records/<record-slug>.md for expansion when origin, location, or shape needs documenting.>
+<The record types this business operates on. One line per type. Records have no standalone files in V2 — they live in their owning tool's `## Records in this tool` section and in the cross-tool registry. Reference by name; for expansion, point at the owning tool or data-architecture.md.>
 
-- **<Record type>** — <one-line description> → [<record-slug>.md](records/<record-slug>.md)
+- **<Record type>** — <one-line description> · owned by [<tool-slug>.md](tools/<tool-slug>.md)
 - **<Record type>** — <one-line description>
 
 ## Workflows

@@ -16,7 +16,9 @@ prioritized across the company's workflows).
 Sibling files referenced inline:
   - roles/<role-slug>.md
   - tools/<tool-slug>.md
-  - records/<record-slug>.md
+
+Records have no standalone files in V2 — name them inline as bare slugs and link
+to the owning tool, never to records/<record-slug>.md.
 -->
 
 **Owner role:** → [<role-slug>.md](../roles/<role-slug>.md)

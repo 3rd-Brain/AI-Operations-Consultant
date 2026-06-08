@@ -29,7 +29,7 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 
 ## Required sections per deliverable type
 
-- **profile:** What we do · Org shape · Stack · Records · Workflows · Primary goal · Top pains · Recent timeline · Maturity signal · Pointer
+- **profile:** What we do · Org shape · Stack · Key records · Workflows · Primary goal · Top pains · Recent timeline · Maturity signal · Pointer
 - **data-architecture:** Architecture — ASCII · Architecture — Mermaid · Sources of truth · Manual bridges · Fragmentation points
 - **sop:** Jobs-to-be-done · SOP · Flowchart — ASCII · Flowchart — Mermaid
 - **automation:** Automation / Agent Potential (with Target KOODAR level, Lives in, Approach, Constraints)
