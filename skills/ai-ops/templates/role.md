@@ -15,7 +15,9 @@ Workflow expansion lives in workflows/<workflow-slug>.md — linked, not duplica
 Sibling files referenced inline:
   - workflows/<workflow-slug>.md
   - tools/<tool-slug>.md
-  - records/<record-slug>.md
+
+Records have no standalone files in V2 — name them inline as bare slugs and link
+to the owning tool, never to records/<record-slug>.md.
 -->
 
 **Department:** <department or team this role belongs to>
@@ -38,19 +40,19 @@ This person is a <one sentence: archetype — e.g. "senior individual contributo
 
 #### Quarterly
 
-- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on [<data>](../records/<record-slug>.md)
+- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on <record-name>
 
 #### Monthly
 
-- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on [<data>](../records/<record-slug>.md)
+- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on <record-name>
 
 #### Weekly
 
-- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on [<data>](../records/<record-slug>.md)
+- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on <record-name>
 
 #### Daily
 
-- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on [<data>](../records/<record-slug>.md)
+- [ ] **<Action verb>** — <what + why> using [<tool>](../tools/<tool-slug>.md) on <record-name>
 
 ### Triggered Tasks
 
