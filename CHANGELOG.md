@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Control-file contracts** to stop `state.md` drifting into a user-facing project board:
+  - `templates/state.md` — internal bookmark (derived, rebuilt on session open, ~300-token cap; boundary rules in-comment).
+  - `templates/open-questions.md` — user-facing worklist that empties as questions are answered (answers move to `decisions/` or the doc they update; no IDs, status, or archive).
+  - `open-questions.md` added to the per-company library tree (top-level, user-facing).
+
+### Changed
+
+- **Session Flow** now opens with a reground step: rebuild `state.md` from canonical sources and reconcile `open-questions.md` against what the user reports.
+- **Library assembly** now verifies the control files on close (state within budget + on-template; open-questions a flat worklist with resolving pointers) — validates, does not rewrite.
+
 ## 3.0.0 — 2026-05-21
 
 **V2 architecture: single conversational consultant replaces the V1 multi-phase pipeline.**

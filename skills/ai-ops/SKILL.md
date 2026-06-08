@@ -290,11 +290,12 @@ workspace/
 
 Most sessions will follow this flow, but it is not a rigid process. The frameworks allow for flexibility to match user needs and goals in each session.
 
-1. Capture the goal and any input the user provides
-2. Save anything that has a home in the library
-3. Confirm direction
-4. Research the domain and best practices
-5. Apply frameworks to create deliverables and provide direction
+1. **Reground (on open).** Rebuild `.ai-ops/state.md` from canonical sources, and reconcile `open-questions.md` against what the user reports — delete what's been answered (promote choices to `decisions/`), add what's newly surfaced. Then proceed.
+2. Capture the goal and any input the user provides
+3. Save anything that has a home in the library
+4. Confirm direction
+5. Research the domain and best practices
+6. Apply frameworks to create deliverables and provide direction
 
 ## Library
 
@@ -305,6 +306,7 @@ Every engagement writes to a per-company (or department) library in the user's w
 ├── profile.md                    # Living company summary
 ├── data-architecture.md          # Cross-tool record registry, sources of truth, fragmentation
 ├── glossary.md                   # Ubiquitous language — user-specific vocabulary
+├── open-questions.md             # User-facing worklist — questions blocked on the client; empties as answered
 ├── roles/
 │   └── <role-slug>.md            # One file per seat
 ├── workflows/

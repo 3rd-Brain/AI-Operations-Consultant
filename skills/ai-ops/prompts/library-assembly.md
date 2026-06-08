@@ -25,6 +25,7 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 1. **Verify every deliverable file exists** at the claimed path. Report missing files as failures.
 2. **Validate template adherence** for each deliverable — read the file, confirm it contains the required section headings for its type.
 3. **For every reference where `exists: no`,** write a stub at the appropriate path using the matching template. Pre-fill stub fields from matching research where available (see Enrichment rules below).
+4. **Verify the control files.** Confirm `.ai-ops/state.md` matches the state template and is within ~300 tokens, and `open-questions.md` is a flat worklist (no IDs, no status fields, no "Answered" section) with pointers that resolve. Report violations as failures — do not rewrite content.
 
 ## Required sections per deliverable type
 
@@ -183,3 +184,4 @@ When <trigger>, <role> wants to <motivation>, so <outcome>.
 3. **Stubs skipped** — references that already existed
 4. **Stubs enriched from research** — list of stubs that got pre-filled fields beyond the basic template
 5. **Errors** — references that couldn't be stubbed (unknown type, invalid slug, etc.)
+6. **Control-file check** — state.md / open-questions.md pass/fail with specific violations.
