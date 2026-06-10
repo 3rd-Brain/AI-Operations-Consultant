@@ -11,7 +11,7 @@ frontmatter keys outside that set (defensive — V2 already only uses allowed
 keys), then zips the result as `<skill>.skill` (Cowork's distributable format —
 just a zip).
 
-Claude Code CLI users install via the marketplace; this script exists for
+Claude Code CLI users install via direct skill copy (see INSTALL.md); this script exists for
 Cowork distribution.
 
 Usage:

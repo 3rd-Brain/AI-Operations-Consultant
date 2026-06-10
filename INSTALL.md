@@ -1,11 +1,12 @@
 # Installing the AI Operations Consultant
 
-The skill ships as plain markdown. Two supported install paths: Claude Code (skill copy) and Cowork (`.skill` import).
+The skill ships as plain markdown. Three supported install paths: Claude Code (skill copy), Cowork (`.skill` import), and other coding agents (folder copy).
 
 ## Claude Code
 
 ```bash
 git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+mkdir -p ~/.claude/skills
 cp -r AI-Operations-Consultant/skills/ai-ops ~/.claude/skills/
 ```
 
@@ -15,7 +16,7 @@ To update: `cd AI-Operations-Consultant && git pull && cp -r skills/ai-ops ~/.cl
 
 ## Cowork
 
-1. Download `dist/cowork/ai-ops.skill` from [releases](https://github.com/3rd-Brain/AI-Operations-Consultant/releases) or this repo
+1. Download `dist/cowork/ai-ops.skill` from this repo
 2. In Cowork: **Skills → Create skill → Import from `.skill` file**
 3. Upload `ai-ops.skill`
 4. Invoke `/ai-ops`

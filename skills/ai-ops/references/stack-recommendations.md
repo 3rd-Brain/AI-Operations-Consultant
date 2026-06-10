@@ -1,6 +1,6 @@
 # Stack Recommendations
 
-Default stack recommendations for the AI Ops Consultant when producing build briefs. Two paths — code and no-code — picked based on who's building and what the build needs.
+Default stack recommendations for the AI Ops Consultant when producing build scopes. Two paths — code and no-code — picked based on who's building and what the build needs.
 
 **Code path** is the default when:
 - The build has a developer or AI agent (Claude Code, Cowork, Codex) doing the work
@@ -12,7 +12,7 @@ Default stack recommendations for the AI Ops Consultant when producing build bri
 - The build is simple enough — a linear automation, a form, a basic CRUD surface
 - The user already lives in a no-code tool (Make, Airtable, Notion, ClickUp, etc.)
 
-When the user's tool research shows they already run something that cleanly fits the build, prefer what they have and surface the choice in the brief. These recommendations are for fresh builds — they are not impositions over existing infrastructure.
+When the user's tool research shows they already run something that cleanly fits the build, prefer what they have and surface the choice in the scope. These recommendations are for fresh builds — they are not impositions over existing infrastructure.
 
 ---
 

@@ -29,6 +29,8 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 
 ## Required sections per deliverable type
 
+Match section names by prefix, not exact string — produced headings may carry suffixes (e.g. `Flowchart — ASCII (for humans)`) and sit at H2 or H3.
+
 - **profile:** What we do · Org shape · Stack · Key records · Workflows · Primary goal · Top pains · Recent timeline · Maturity signal · Pointer
 - **data-architecture:** Architecture — ASCII · Architecture — Mermaid · Sources of truth · Manual bridges · Fragmentation points
 - **sop:** Jobs-to-be-done · SOP · Flowchart — ASCII · Flowchart — Mermaid

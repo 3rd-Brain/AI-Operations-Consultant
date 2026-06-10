@@ -334,35 +334,34 @@ Every engagement writes to a per-company (or department) library in the user's w
     ├── research/
     │   └── <topic>-<YYYY-MM-DD>.md
     ├── profile-history/
-    │   └── <YYYY-MM-DD>.md
-    ├── state.md                  # Last session, current focus
-    ├── library-index.md          # Machine-readable index
-    └── session-log/
-        └── <YYYY-MM-DD>-<session-slug>.md
+    │   └── <YYYY-MM-DD>.md       # Snapshot of profile.md taken before each overwrite
+    └── state.md                  # Last session, current focus
 ```
 
 **No `records/` folder.** Records fold into two places: `tools/<tool>.md` carries the canonical owned-records list per tool, and `data-architecture.md` carries the cross-tool registry, sources of truth, and fragmentation. Record references in any document point at the owning tool or at `data-architecture.md`, never at a per-record file.
 
 **Bounded contexts.** Roadmap's `scope_type` (company / department / role / workflow) handles this. No folder change required — the scope is named in the roadmap or scope filename.
 
-When creating library files, use the templates at `templates/`. Each top-level file type has a corresponding template: `profile.md`, `role.md`, `workflow.md`, `tool.md`, `glossary.md`.
+When creating library files, use the templates at `templates/`: `profile.md`, `role.md`, `workflow.md`, `tool.md`, `glossary.md`, `state.md`, `open-questions.md`. (`data-architecture.md` has no standalone template — its structure lives in `prompts/company-data-architecture.md`.)
 
 ### Navigator (visual review UI)
 
-When the operator wants to *see* the whole library — review it, edit it, hand it to their team, or grade maturity and priorities — launch the local navigator pointed at their library:
+When the operator wants to *see* the whole library — review it, edit it, or hand it to their team — launch the local navigator pointed at their library. The navigator ships inside this skill at `scripts/navigator/` (relative to the directory containing this SKILL.md):
 
 ```bash
-ROOT="{{output_root}}" node "${CLAUDE_PLUGIN_ROOT:-.}/scripts/navigator/server.mjs" --port 4173
+ROOT="{{output_root}}" node "<this-skill's-directory>/scripts/navigator/server.mjs" --port 4173
 # then share http://localhost:4173
 ```
 
-It renders the library as a wiki + dashboard, an org chart (from each role's `Reports to`), and color-coded workflow step-maps (from each workflow's `## SOP`), and writes framework grades to `{{output_root}}/.ai-ops/navigator-grades.json`. It reads and writes the same library files — no separate data store. Localhost only; `.md` writes only. See `scripts/navigator/README.md`.
+Resolve `<this-skill's-directory>` to wherever this skill is installed (e.g. `~/.claude/skills/ai-ops`). If the `scripts/navigator/` folder isn't present in this installation, say so and continue without it — the navigator is optional.
+
+It renders the library as a wiki + dashboard, an org chart (from each role's `Reports to`), and color-coded workflow step-maps (from each workflow's `## SOP`). Everything on the dashboard is derived live from the library files — counts, completeness, top pains, the profile's maturity signal. It reads and writes the same library files; there is no separate data store and nothing to maintain. Localhost only; markdown writes only. See `scripts/navigator/README.md`.
 
 ## Specialist Dispatch
 
 When a task benefits from focused analysis or a fresh context window, dispatch a subagent using a prompt template from `prompts/`. Fill in the template variables with the user's context and library content, then dispatch. The user sees results, not routing.
 
-Specialists write files directly. Each specialist returns metadata (file path written, library references, pains, open questions) — not document content inline. Pass `{{output_root}}` to every specialist (the per-company library base path).
+Specialists write files directly. Each specialist returns structured metadata per its prompt's "What to return" section (typically: file path written, library references, pains or gaps, open questions) — not document content inline. Pass `{{output_root}}` to every specialist (the per-company library base path).
 
 **Available specialists:**
 
@@ -404,7 +403,7 @@ Library assembly runs **once at the end** of each chain, receiving all deliverab
 1. Workflow SOP → writes the SOP portion of the workflow file
 2. Workflow tool research → writes per-tool research file
 3. Workflow automation → appends Automation / Agent Potential to the workflow file
-4. Library assembly → verifies all three files + creates stubs for the union of all references
+4. Library assembly → verifies all three deliverables (the SOP and automation steps write the same workflow file, so two files) + creates stubs for the union of all references
 
 **Role** (2 dispatches):
 1. Role → writes the role file
@@ -516,7 +515,7 @@ The glossary is one file, not one-per-term. Append entries; never create a `glos
 
 ### Assembly rules
 
-Every specialist returns a **library references** list. Each reference has: type (tool / workflow / role / record), slug, one-line purpose, and whether it exists in the library.
+Chain specialists return a **library references** list (Build Scope returns tools/records-cited instead, and library assembly returns verification results — see each prompt's "What to return"). Each reference has: type (tool / workflow / role / record), slug, one-line purpose, and whether it exists in the library.
 
 Specialists that weren't given library context return `exists: unknown` instead of guessing. Before passing references to library assembly, resolve every `unknown` against the library on disk — a reference exists if `{{output_root}}/<type-folder>/<slug>.md` is present (for records: if the record appears in the owning tool's `## Records in this tool` section or in `data-architecture.md`).
 
