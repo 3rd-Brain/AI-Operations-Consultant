@@ -6,7 +6,7 @@
 
 A consultant that produces build specs your coding agent can ship from.
 
-For founders and operators with an automation backlog they haven't shipped. The consultant runs a session and produces a build spec your coding agent can execute against. The conversation you'd otherwise pay a consultant $40K for.
+For founders and operators with an automation backlog they haven't shipped. The consultant runs a session and produces a build spec your coding agent can execute against.
 
 ## Quick Start
 
