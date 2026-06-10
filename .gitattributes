@@ -1,0 +1,4 @@
+# The pre-commit hook is a portable POSIX script — must stay LF, never CRLF.
+skills/ai-ops/scripts/hooks/pre-commit text eol=lf
+*.mjs text eol=lf
+*.sh text eol=lf

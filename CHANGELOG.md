@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.3.0 — 2026-06-10
+
+Template-completeness lint — structure is now a deterministic script's job, substance stays the specialist's.
+
+### Added
+
+- **`scripts/navigator/lint.mjs`** — a zero-dependency structure lint. It derives the required sections and header fields per document type by parsing `templates/*.md` at runtime (the templates stay the single source of truth — no second manifest to drift), maps library files to types the same way the navigator does, and reports exactly which `profile.md` / `glossary.md` / `open-questions.md` / `roles/` / `tools/` / `workflows/` documents are missing which sections. Plain-language report, `--json` for machines, exit 0 clean / 1 on gaps. It checks structure only — a deferred doc with all sections present and one-line bodies passes; judging substance is the library-assembly specialist's job. `data-architecture.md` and untemplated folders aren't linted (no canonical template).
+- **Navigator auto-runs the lint.** `server.mjs` runs it at spin-up (printed to the console) and serves it at `GET /api/lint` (recomputed per request, no cache). The Dashboard gained a **Template completeness** card — N of M documents matching their template, with each incomplete file's missing sections as chips, derived live from the files.
+- **`scripts/hooks/pre-commit`** — a portable POSIX hook for your library repo: lints staged library documents and blocks the commit on gaps, with a `LINT_SKIP=1` bypass. Installation documented in the navigator README.
+- **CI** (`.github/workflows/lint-examples.yml`) runs the lint's own tests (complete + gapped fixtures under `scripts/navigator/test/`) and a `node --check` on both navigator scripts on every push and PR.
+
+### Changed
+
+- **Library assembly's verification step is now split.** `prompts/library-assembly.md` runs the lint for the structural check when shell access exists (manual section checklist as the no-shell fallback), and the specialist's job narrows explicitly to semantic judgment: placeholder-prose detection, evidence grounding, reasoned KOODAR targets. `SKILL.md` states the division — structure is script-checked, substance is specialist-checked.
+
+### Why
+
+A demo library shipped with workflows missing both flowchart sections and the whole Automation / Agent Potential section, roles missing Infinite Tasks, and a profile with 6 of 10 sections — and nothing flagged it because everything still rendered. Render is the wrong oracle for structure, and LLM eyeballing drifts under pressure. Structure is now a script's job.
+
 ## 3.2.2 — 2026-06-10
 
 ### Fixed

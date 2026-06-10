@@ -1,0 +1,71 @@
+#!/bin/sh
+# AI-Ops template-completeness pre-commit hook.
+#
+# Drop this into your LIBRARY repo's .git/hooks/ (the per-company library the ai-ops
+# skill writes into — usually your own repo, not the skill's repo):
+#
+#   cp /path/to/skills/ai-ops/scripts/hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# On every commit it runs the template lint on the STAGED library documents
+# (profile / glossary / open-questions / roles / tools / workflows) and blocks the
+# commit if any are missing required template sections. Substance is still the
+# library-assembly specialist's job — this only checks that the structure is there.
+#
+#   LINT_SKIP=1 git commit ...      # bypass the check for one commit
+#
+# It needs the skill's lint.mjs. It looks for it in this order:
+#   1. $AI_OPS_LINT                 (explicit path to lint.mjs)
+#   2. common Claude Code / Cowork skill-install locations
+# If it can't find lint.mjs or node, it prints how to fix it and ALLOWS the commit
+# (a missing linter should never wedge your commits).
+
+[ "$LINT_SKIP" = "1" ] && exit 0
+
+# --- locate lint.mjs ---------------------------------------------------------
+LINT="$AI_OPS_LINT"
+if [ -z "$LINT" ]; then
+  for c in \
+    "$HOME/.claude/skills/ai-ops/scripts/navigator/lint.mjs" \
+    "$HOME/.config/claude/skills/ai-ops/scripts/navigator/lint.mjs" \
+    "$HOME/.claude/plugins/anthropic-skills/skills/ai-ops/scripts/navigator/lint.mjs" \
+    "$HOME/Library/Application Support/Claude/skills/ai-ops/scripts/navigator/lint.mjs"
+  do
+    [ -f "$c" ] && LINT="$c" && break
+  done
+fi
+if [ -z "$LINT" ] || [ ! -f "$LINT" ]; then
+  echo "ai-ops lint: lint.mjs not found — skipping the template check."
+  echo "  Set AI_OPS_LINT to the skill's lint.mjs to enable it, e.g.:"
+  echo "    export AI_OPS_LINT=\"\$HOME/.claude/skills/ai-ops/scripts/navigator/lint.mjs\""
+  exit 0
+fi
+command -v node >/dev/null 2>&1 || { echo "ai-ops lint: node not found — skipping."; exit 0; }
+
+# --- collect staged library documents ----------------------------------------
+# Library root defaults to the repo root (the common case: the library IS the repo).
+# Override with AI_OPS_LINT_ROOT if your library sits elsewhere.
+ROOT="${AI_OPS_LINT_ROOT:-$(git rev-parse --show-toplevel)}"
+
+# Staged (added/copied/modified) markdown files, repo-relative. lint.mjs decides which
+# of these are actually templated documents and ignores the rest.
+staged=$(git diff --cached --name-only --diff-filter=ACM -- '*.md')
+[ -z "$staged" ] && exit 0
+files=$(printf '%s\n' "$staged" | tr '\n' ',')
+
+# --- run the lint -------------------------------------------------------------
+node "$LINT" "$ROOT" --files "$files"
+status=$?
+case "$status" in
+  0) exit 0 ;;
+  1)
+    echo ""
+    echo "Commit blocked: staged library documents are missing required template sections (listed above)."
+    echo "Add the missing sections, or bypass for this one commit with:  LINT_SKIP=1 git commit ..."
+    exit 1
+    ;;
+  *)
+    echo "ai-ops lint: the check could not run (exit $status) — allowing the commit."
+    exit 0
+    ;;
+esac
