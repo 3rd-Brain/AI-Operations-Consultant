@@ -379,6 +379,23 @@ Specialists write files directly. Each specialist returns metadata (file path wr
 | Build Scope | `prompts/build-scope.md` | `{{output_root}}/scopes/<build-slug>-{{today}}.md` |
 | Library assembly | `prompts/library-assembly.md` | writes stubs at corresponding `{{output_root}}/<folder>/<slug>.md` |
 
+**Context variables per specialist.** Fill every variable the prompt declares — a dispatched prompt with an unfilled `{{variable}}` is a bug. Beyond `{{output_root}}` (always) and the slugs/dates in the paths above:
+
+| Specialist | Variables to fill |
+|---|---|
+| Workflow SOP | `{{workflow_slug}}` `{{workflow_description}}` `{{company_context}}` `{{existing_library}}` |
+| Workflow tool research | `{{workflow_slug}}` `{{completed_sop}}` `{{tool_stack}}` `{{maturity_level}}` `{{existing_research}}` `{{today}}` |
+| Workflow automation | `{{workflow_slug}}` `{{workflow_file_path}}` `{{tool_research}}` `{{maturity_level}}` `{{session_goal}}` |
+| Role | `{{role_slug}}` `{{role_description}}` `{{company_context}}` `{{existing_library}}` `{{existing_research}}` |
+| Company profile | `{{conversation_context}}` `{{existing_library}}` |
+| Company stack research | `{{company_profile}}` `{{maturity_level}}` `{{existing_research}}` `{{today}}` |
+| Company data architecture | `{{company_profile}}` `{{stack_research}}` `{{maturity_level}}` |
+| Roadmap | `{{scope_type}}` `{{scope_name}}` `{{user_goal}}` `{{target_level}}` `{{profile_content}}` `{{data_architecture_content}}` `{{scope_file_content}}` `{{related_files}}` `{{existing_library}}` `{{today}}` |
+| Build Scope | `{{workflow_slug}}` `{{automation_target}}` `{{workflow_content}}` `{{tool_research_content}}` `{{tool_files_content}}` `{{profile_content}}` `{{stack}}` `{{today}}` |
+| Library assembly | `{{deliverables}}` `{{library_references}}` `{{research_files}}` |
+
+Variable sources: `{{maturity_level}}` is the company's 5-Levels classification — read it from the profile's Maturity signal section, or classify from the four signals in Frameworks before dispatching a specialist that needs it. `{{today}}` is today's date as YYYY-MM-DD. `{{existing_library}}` is the list of files currently in the library (paths + one-line purposes where known). `{{session_goal}}` is the user's stated goal for this session.
+
 ### Chains
 
 Library assembly runs **once at the end** of each chain, receiving all deliverable file paths and the deduplicated set of references from every specialist step. This is faster than running assembly between specialist steps and lets stubs deduplicate naturally.
@@ -500,6 +517,8 @@ The glossary is one file, not one-per-term. Append entries; never create a `glos
 ### Assembly rules
 
 Every specialist returns a **library references** list. Each reference has: type (tool / workflow / role / record), slug, one-line purpose, and whether it exists in the library.
+
+Specialists that weren't given library context return `exists: unknown` instead of guessing. Before passing references to library assembly, resolve every `unknown` against the library on disk — a reference exists if `{{output_root}}/<type-folder>/<slug>.md` is present (for records: if the record appears in the owning tool's `## Records in this tool` section or in `data-architecture.md`).
 
 The orchestrator accumulates these lists across the chain and deduplicates by slug (preferring the most specific purpose if duplicates differ). The library assembly subagent — running once at the end — verifies each deliverable file exists with the right sections and creates stubs for every reference where `exists: no` using the matching template. Tool and record stubs are enriched from any matching research files passed in (see Research handoff below). Role and workflow stubs start as basic placeholders.
 

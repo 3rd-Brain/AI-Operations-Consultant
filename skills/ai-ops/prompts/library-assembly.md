@@ -8,24 +8,24 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 
 **Chain deliverables to verify:**
 {{deliverables}}
-*(list of objects, each with: `type` (profile / data-architecture / sop / automation / role / stack-research) and `path` (absolute path the specialist wrote to))*
+*(list of objects, each with: `type` (profile / data-architecture / sop / automation / role / stack-research / workflow-tool-research) and `path` (absolute path the specialist wrote to))*
 
 **Aggregated library references (deduplicated across all chain steps):**
 {{library_references}}
 *(every tool / role / workflow referenced anywhere in the chain, deduplicated by slug. Each has: type, slug, purpose, exists. Records are not a stub type in V2 — record references fold into the owning tool's "Records in this tool" section and into `data-architecture.md`, neither of which produces a per-record stub.)*
 
-**Library root:** {{library_root}}
+**Library root (output root):** {{output_root}}
 *(per-company library base path — stubs go under here)*
 
 **Available research files:** {{research_files}}
-*(list of file paths under `{{library_root}}/.ai-ops/research/` the orchestrator has identified as potentially useful for enriching stubs — empty list if none exist yet)*
+*(list of file paths under `{{output_root}}/.ai-ops/research/` the orchestrator has identified as potentially useful for enriching stubs — empty list if none exist yet)*
 
 ## Job
 
 1. **Verify every deliverable file exists** at the claimed path. Report missing files as failures.
 2. **Validate template adherence** for each deliverable — read the file, confirm it contains the required section headings for its type.
-3. **For every reference where `exists: no`,** write a stub at the appropriate path using the matching template. Pre-fill stub fields from matching research where available (see Enrichment rules below).
-4. **Verify the control files.** Confirm `.ai-ops/state.md` matches the state template and is within ~300 tokens, and `open-questions.md` is a flat worklist (no IDs, no status fields, no "Answered" section) with pointers that resolve. Report violations as failures — do not rewrite content.
+3. **For every reference where `exists: no`,** write a stub at the appropriate path using the matching template. Pre-fill stub fields from matching research where available (see Enrichment rules below). If a reference arrives with `exists: unknown` (the orchestrator should have resolved these before dispatch), do not stub it — report it as a failure so the orchestrator can resolve and re-dispatch.
+4. **Verify the control files.** Confirm `.ai-ops/state.md` matches the state template structure — `**Last session:**` and `**Current focus:**` field lines followed by `## Pointers` and `## Next actions` sections — and is within ~300 tokens. Confirm `open-questions.md` is a flat worklist (no IDs, no status fields, no "Answered" section) with pointers that resolve. Report violations as failures — do not rewrite content.
 
 ## Required sections per deliverable type
 
@@ -35,14 +35,15 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 - **automation:** Automation / Agent Potential (with Target KOODAR level, Lives in, Approach, Constraints)
 - **role:** Objectives + Metrics · Role Responsibilities · KOODAR Breakdown
 - **stack-research:** one tool section per researched tool with API / Native automation features / Connections / Integration walls
+- **workflow-tool-research:** one tool section per researched tool with API / Native automation features / Existing integrations / Integration walls
 
 ## Stub paths
 
 | Reference type | Stub path | Template to use |
 |---|---|---|
-| `tool` | `{{library_root}}/tools/<slug>.md` | tool template (below) |
-| `role` | `{{library_root}}/roles/<slug>.md` | role template (below) |
-| `workflow` | `{{library_root}}/workflows/<slug>.md` | workflow template (below) |
+| `tool` | `{{output_root}}/tools/<slug>.md` | tool template (below) |
+| `role` | `{{output_root}}/roles/<slug>.md` | role template (below) |
+| `workflow` | `{{output_root}}/workflows/<slug>.md` | workflow template (below) |
 
 Record references are not stubbed — they fold into the owning tool's `Records in this tool` section and into `data-architecture.md`. If a `record` reference arrives in the aggregated references, log it as a no-op (do not error) and surface it in the return.
 
