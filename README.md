@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-3.0.0-blue) ![license](https://img.shields.io/badge/license-GPL--3.0-blue) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
+![version](https://img.shields.io/badge/version-3.2.0-blue) ![license](https://img.shields.io/badge/license-GPL--3.0-blue) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
 [Methodology](#methodology) · [Examples](#examples) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
 
@@ -12,6 +12,7 @@ For founders and operators with an automation backlog they haven't shipped. The 
 
 ```bash
 git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
+mkdir -p ~/.claude/skills
 cp -r AI-Operations-Consultant/skills/ai-ops ~/.claude/skills/
 ```
 
@@ -29,6 +30,16 @@ Every session writes to a per-company library you keep and grow over time.
 - **Build scopes** - executable specs your coding agent can ship from in one sitting
 
 Plus auto-captured `decisions/` (significant choices, dated) and `glossary.md` (your business's vocabulary).
+
+### Navigator — see your library
+
+The skill ships with a zero-dependency local web UI (`skills/ai-ops/scripts/navigator/`) that renders the library as a wiki + dashboard: an org chart built from your role docs, color-coded step maps for every workflow SOP, live dashboard facts derived from the files (counts, completeness, top pains, maturity signal), and in-place editing of any page. Ask the consultant to "open the navigator," or run it yourself:
+
+```bash
+ROOT="<your-company-library>" node ~/.claude/skills/ai-ops/scripts/navigator/server.mjs --port 4173
+```
+
+Localhost only, markdown writes only, no separate data store — it reads and writes the same library files.
 
 ## How It Works
 

@@ -1,5 +1,28 @@
 # Changelog
 
+## 3.2.0 — 2026-06-10
+
+Navigator overhaul + library hygiene, from the 2026-06-10 repo audit (issues #10–#12, #19–#25).
+
+### Added
+
+- **Navigator documented and shipped with the skill.** The local wiki/dashboard UI (added between 3.0.0 and 3.1.0, previously unrecorded here) moved from repo-root `scripts/navigator/` to `skills/ai-ops/scripts/navigator/`, so every install mode — Claude Code copy, Cowork `.skill`, other agents — actually receives it (#10). README section added.
+- **Profile history** — the company-profile specialist now snapshots an existing `profile.md` to `.ai-ops/profile-history/<date>.md` before overwriting (#19).
+
+### Changed
+
+- **Grading layer removed** (#11). `navigator-grades.json`, the grade chips, and the graded dashboard cards are gone — no writer ever existed and a maintained sidecar is a second owner for judgments the library already holds. The dashboard now derives everything live from the files: counts, stub-vs-enriched completeness, top pains, the profile's maturity signal.
+- **SOP step parser rewritten to the skill's template format** (#12) — `**<Action>** — <role> uses <tool> on <record> — <produces what>` with `Exception:`/`Escalate:` sub-bullets; markdown-link tools resolve; old backtick-format lines still parse. Workflow Maps now render real library content.
+- **Navigator stub templates aligned** with `templates/` / library-assembly stub shapes, and navigator-created stubs carry a stub marker so stub detection works regardless of length (#22).
+- Library tree pruned of files nothing writes (`library-index.md`, `session-log/`) (#19); SKILL.md template list completed; research record-lists standardized to the inline-field form; "build briefs" renamed to build scopes; assembly section matching documented as prefix-based (#24, #25).
+
+### Fixed
+
+- **Navigator security** (#20): Host/Origin validation on the local server (blocks browser-originated cross-site writes), case-insensitive markdown write check, writes under `.ai-ops/` rejected.
+- **`parseField`** no longer captures the next line when a role field is empty — fresh stubs render clean org data (#21); field-label regex escaped.
+- Port flag validation + friendly EADDRINUSE error; orphaned `systemMermaid` extraction removed; dead grade-editor code (`SCHEMAS`, `.grade-panel` CSS) deleted (#25).
+- Docs sync (#24): version badge current, navigator in README, dead releases link dropped, `mkdir -p` in install commands, INSTALL.md wording, build-script docstring, SPDX id.
+
 ## 3.1.1 — 2026-06-10
 
 Chain-wiring fixes from the 2026-06-10 repo audit (issues #13–#18, #23).

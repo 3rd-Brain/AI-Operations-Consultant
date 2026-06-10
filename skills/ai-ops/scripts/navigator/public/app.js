@@ -8,9 +8,6 @@ const CAT_COLOR = {
   profile: '#d4a23a', roles: '#5a9bd4', tools: '#9b7fd4', workflows: '#3fb950',
   scopes: '#e08c4a', roadmaps: '#4ac9c9', decisions: '#c96a8c', ops: '#6b7785', meetings: '#7d8a4a', other: '#6b7785',
 };
-const PRI_COLOR = { P0: '#e5534b', P1: '#d4a23a', P2: '#5a6b7d' };
-const READY_COLOR = { Strong: '#3fb950', Medium: '#d4a23a', Weak: '#e5534b' };
-const FRICTION_COLOR = { Low: '#3fb950', Med: '#d4a23a', High: '#e5534b' };
 const CAT_ORDER = ['profile', 'workflows', 'roles', 'tools', 'scopes', 'roadmaps', 'decisions', 'ops', 'meetings', 'other'];
 const _cc = {};
 function colorFor(name, light = 60) {
@@ -20,34 +17,7 @@ function colorFor(name, light = 60) {
   return (_cc[key] = `hsl(${h % 360} 60% ${light}%)`);
 }
 
-// ---- grading schemas -------------------------------------------------------
-const SCHEMAS = {
-  profile: [
-    { key: 'maturityLevel', label: 'Maturity (5 Levels)', opts: ['1', '2', '3', '4', '5'] },
-    { key: 'bindingC', label: 'Binding C', opts: ['Consistency', 'Clarity', 'Capacity'] },
-    { key: 'lever', label: 'Lever (P→P→T)', opts: ['People', 'Process', 'Tools'] },
-    { key: 'pillarPeople', label: 'People', opts: ['Strong', 'Medium', 'Weak'] },
-    { key: 'pillarProcess', label: 'Process', opts: ['Strong', 'Medium', 'Weak'] },
-    { key: 'pillarTools', label: 'Tools', opts: ['Strong', 'Medium', 'Weak'] },
-  ],
-  workflows: [
-    { key: 'priority', label: 'Priority', opts: ['P0', 'P1', 'P2'] },
-    { key: 'koodar', label: 'KOODAR target', opts: ['K', 'KA', 'KDA', 'KDAR', 'KODAR', 'KOODAR'] },
-    { key: 'aiStage', label: '4-Stage AI', opts: ['1', '2', '3', '4'] },
-    { key: 'friction', label: 'Friction', opts: ['Low', 'Med', 'High'] },
-    { key: 'status', label: 'Status', opts: ['stub', 'enriched', 'scoped', 'built'] },
-  ],
-  roles: [{ key: 'readiness', label: 'Readiness', opts: ['Strong', 'Medium', 'Weak'] }, { key: 'status', label: 'Status', opts: ['stub', 'complete'] }],
-  tools: [{ key: 'readiness', label: 'Integration readiness', opts: ['Strong', 'Medium', 'Weak'] }, { key: 'status', label: 'Status', opts: ['stub', 'complete'] }],
-  _default: [{ key: 'status', label: 'Status', opts: ['stub', 'complete'] }],
-};
 function nodeColor(n) {
-  const g = n.grade;
-  if (g) {
-    if (n.category === 'workflows' && g.priority) return PRI_COLOR[g.priority];
-    if (g.readiness) return READY_COLOR[g.readiness];
-    if (g.friction) return FRICTION_COLOR[g.friction];
-  }
   return CAT_COLOR[n.category] || CAT_COLOR.other;
 }
 
@@ -112,8 +82,7 @@ function renderTree() {
     (groups[cat] || []).sort((a, b) => a.label.localeCompare(b.label)).forEach((n) => {
       const item = document.createElement('div');
       item.className = 'tree-item' + (n.stub ? ' stub' : ''); item.dataset.id = n.id;
-      item.innerHTML = `<span class="dot" style="background:${nodeColor(n)}"></span><span class="nm">${esc(n.label)}</span>` +
-        (n.grade?.priority ? `<span class="pri" style="background:${PRI_COLOR[n.grade.priority]}">${n.grade.priority}</span>` : '');
+      item.innerHTML = `<span class="dot" style="background:${nodeColor(n)}"></span><span class="nm">${esc(n.label)}</span>`;
       item.addEventListener('click', () => openPage(n.id));
       g.append(item);
     });
@@ -146,50 +115,53 @@ function startInlineCreate(cat, groupEl) {
 }
 
 // ---- dashboard -------------------------------------------------------------
+// Everything here is DERIVED from the library files — counts, stub detection,
+// the profile's own Maturity signal prose, and the consultant's pains file.
+// The navigator carries no assessment state of its own.
 async function renderDashboard() {
   const root = $('#view-dashboard');
   const profile = S.graph.nodes.find((n) => /(^|\/)profile\.md$/.test(n.id));
-  const pg = profile?.grade || {};
-  const wf = S.graph.nodes.filter((n) => n.category === 'workflows');
-  const pri = { P0: [], P1: [], P2: [], _: [] }; wf.forEach((n) => (pri[n.grade?.priority] || pri._).push(n));
   const counts = {}; S.graph.nodes.forEach((n) => { counts[n.category] ||= { t: 0, d: 0 }; counts[n.category].t++; if (!n.stub) counts[n.category].d++; });
   const libT = S.graph.nodes.length, libD = S.graph.nodes.filter((n) => !n.stub).length;
-  const pillar = (l, v) => `<div class="kv"><span class="k">${l}</span><span class="tag" style="background:${READY_COLOR[v] || '#444'}">${v || '—'}</span></div>`;
+  const cnt = (c) => counts[c] || { t: 0, d: 0 };
   root.innerHTML = `
     <div class="dash-hero">
       <h1>${esc(S.graph.root)} <span style="color:var(--muted);font-weight:400;font-size:18px">· AI-Ops workspace</span></h1>
-      <div class="sub">Read, edit, and grade the company library against the AI-Ops frameworks.</div>
+      <div class="sub">Read and edit the company library. Everything below is derived live from the files.</div>
       <p class="dash-lead" id="dashLead"></p>
     </div>
     <div class="cards">
-      <div class="card"><h3>Digital Maturity</h3><div class="metric">L${pg.maturityLevel || '—'}<small> / 5</small></div>
-        <div class="kv"><span class="k">Binding C</span><b>${pg.bindingC || '—'}</b></div>
-        <div class="kv"><span class="k">Lever (P→P→T)</span><b>${pg.lever || '—'}</b></div></div>
-      <div class="card"><h3>Pillar Readiness</h3>${pillar('People', pg.pillarPeople)}${pillar('Process', pg.pillarProcess)}${pillar('Tools', pg.pillarTools)}</div>
-      <div class="card"><h3>Workflows by Priority</h3>
-        <div class="kv"><span class="k">P0 — Binding</span><b style="color:${PRI_COLOR.P0}">${pri.P0.length}</b></div>
-        <div class="kv"><span class="k">P1 — Adoption</span><b style="color:${PRI_COLOR.P1}">${pri.P1.length}</b></div>
-        <div class="kv"><span class="k">P2 — Deferred</span><b style="color:${PRI_COLOR.P2}">${pri.P2.length}</b></div></div>
-      <div class="card"><h3>Library Completeness</h3><div class="metric">${libD}<small> / ${libT} pages</small></div>
-        <div class="bar"><span style="width:${Math.round((libD / libT) * 100)}%"></span></div>
+      <div class="card"><h3>Library</h3>
+        <div class="kv"><span class="k">Roles</span><b>${cnt('roles').t}</b></div>
+        <div class="kv"><span class="k">Workflows</span><b>${cnt('workflows').t}</b></div>
+        <div class="kv"><span class="k">Tools</span><b>${cnt('tools').t}</b></div></div>
+      <div class="card"><h3>Library Completeness</h3><div class="metric">${libD}<small> / ${libT} pages enriched</small></div>
+        <div class="bar"><span style="width:${libT ? Math.round((libD / libT) * 100) : 0}%"></span></div>
         <div style="margin-top:10px">${CAT_ORDER.filter((c) => counts[c]).map((c) => `<div class="kv"><span class="k">${c}</span><span>${counts[c].d}/${counts[c].t}</span></div>`).join('')}</div></div>
+      <div class="card"><h3>Maturity Signal</h3><div class="card-prose" id="dashMaturity"><span style="color:var(--muted)">No Maturity signal section in profile.md yet.</span></div></div>
     </div>
-    <div class="section-title">Workflow board</div>
-    <div class="board">${['P0', 'P1', 'P2'].map((p) => `
-      <div class="board-col"><h4><span class="badge" style="background:${PRI_COLOR[p]}">${p}</span> ${{ P0: 'Binding', P1: 'Adoption', P2: 'Deferred' }[p]}</h4>
-      ${(pri[p].concat(p === 'P2' ? pri._ : [])).map(wfCard).join('') || '<div style="color:var(--muted);font-size:12px">—</div>'}</div>`).join('')}</div>
-    <div class="section-title">Top pains (P0)</div>
-    <div class="dash-pains markdown" id="dashPains">Loading…</div>`;
-  $$('#view-dashboard .wf-card').forEach((c) => c.addEventListener('click', () => openPage(c.dataset.id)));
+    <div class="section-title">Top pains</div>
+    <div class="dash-pains markdown" id="dashPains"><span style="color:var(--muted)">No .ai-ops/pains-and-bottlenecks.md yet.</span></div>`;
   const prof = await api('/api/file?path=' + encodeURIComponent(profile?.id || 'profile.md')).catch(() => null);
-  if (prof) { const m = prof.content.match(/##\s*What we do\s*\n+([\s\S]*?)(\n##\s|\n$)/); $('#dashLead').textContent = m ? m[1].trim().replace(/\s+/g, ' ').slice(0, 360) + (m[1].length > 360 ? '…' : '') : ''; }
+  if (prof) {
+    const m = prof.content.match(/##\s*What we do\s*\n+([\s\S]*?)(\n##\s|\n$)/);
+    $('#dashLead').textContent = m ? m[1].trim().replace(/\s+/g, ' ').slice(0, 360) + (m[1].length > 360 ? '…' : '') : '';
+    // Maturity signal = the section's first paragraph, rendered as plain prose.
+    const ms = prof.content.match(/##\s*Maturity signal\s*\n+([\s\S]*?)(\n##\s|$)/);
+    if (ms) {
+      const para = ms[1].split(/\n\s*\n/).map((s) => s.trim()).find((s) => s && !/^[-*]\s/.test(s));
+      if (para) $('#dashMaturity').textContent = para.replace(/\s+/g, ' ');
+    }
+  }
+  // Top pains = the first bullet lines of the consultant's pains file, verbatim.
   const pains = S.graph.nodes.find((n) => /pains-and-bottlenecks\.md$/.test(n.id));
-  if (pains) { const c = await api('/api/file?path=' + encodeURIComponent(pains.id)).catch(() => null); const b = c && c.content.match(/(##\s*P0[\s\S]*?)(\n##\s|$)/); $('#dashPains').innerHTML = b ? marked.parse(b[1]) : '<span style="color:var(--muted)">No P0 section.</span>'; }
-}
-function wfCard(n) {
-  const g = n.grade || {};
-  const m = [g.friction && `<span class="mini">friction: ${g.friction}</span>`, g.koodar && `<span class="mini">${g.koodar}</span>`, `<span class="mini">${g.status || (n.stub ? 'stub' : 'page')}</span>`].filter(Boolean).join('');
-  return `<div class="wf-card" data-id="${n.id}"><div class="wf-name">${esc(n.label)}</div><div class="wf-meta">${m}</div></div>`;
+  if (pains) {
+    const c = await api('/api/file?path=' + encodeURIComponent(pains.id)).catch(() => null);
+    if (c) {
+      const bullets = c.content.split('\n').filter((l) => /^\s*[-*]\s+\S/.test(l)).slice(0, 5);
+      $('#dashPains').innerHTML = bullets.length ? marked.parse(bullets.join('\n')) : '<span style="color:var(--muted)">No bullet items in pains-and-bottlenecks.md yet.</span>';
+    }
+  }
 }
 
 // ---- org & roles -----------------------------------------------------------
@@ -198,7 +170,7 @@ function roleCard(role, isLead) {
   const av = (role.label.match(/\b\w/g) || ['?']).slice(0, 2).join('').toUpperCase();
   const wfs = workflowsOwnedBy(role.id);
   const chips = wfs.length
-    ? wfs.map((w) => `<span class="wf-chip" data-id="${w.id}"><span class="pdot" style="background:${PRI_COLOR[w.grade?.priority] || '#5a6b7d'}"></span>${esc(w.label)}</span>`).join('')
+    ? wfs.map((w) => `<span class="wf-chip" data-id="${w.id}"><span class="pdot" style="background:${CAT_COLOR.workflows}"></span>${esc(w.label)}</span>`).join('')
     : '<span class="wf-chip none">no owned workflows</span>';
   return `<div class="role-card${isLead ? ' lead' : ''}">
     <div class="rc-name" data-id="${role.id}"><span class="av" style="background:${colorFor(role.label)}">${av}</span>${esc(role.label)}</div>
@@ -221,7 +193,7 @@ function renderOrg() {
   const deptCards = Object.entries(depts).map(([d, v]) => `
     <div class="dept-card"><h4>${esc(d)}</h4>
       <div class="roles-line">${v.roles.map((r) => esc(r.label)).join(' · ')}</div>
-      <div>${[...v.wf].map((id) => { const w = S.byId[id]; return `<span class="wf-chip" data-id="${id}"><span class="pdot" style="background:${PRI_COLOR[w.grade?.priority] || '#5a6b7d'}"></span>${esc(w.label)}</span>`; }).join('') || '<span class="wf-chip none">none</span>'}</div>
+      <div>${[...v.wf].map((id) => { const w = S.byId[id]; return `<span class="wf-chip" data-id="${id}"><span class="pdot" style="background:${CAT_COLOR.workflows}"></span>${esc(w.label)}</span>`; }).join('') || '<span class="wf-chip none">none</span>'}</div>
     </div>`).join('');
   root.innerHTML = `
     <div class="org-hero"><h1>Org &amp; Roles</h1><div class="sub">Reporting lines from each role's “Reports to”, with the workflows each role owns. Click a name to open its page.</div></div>
@@ -233,12 +205,11 @@ function renderOrg() {
 
 // ---- workflow maps ---------------------------------------------------------
 function renderFlows() {
-  const wfs = S.graph.nodes.filter((n) => n.category === 'workflows').sort((a, b) => (a.grade?.priority || 'Z').localeCompare(b.grade?.priority || 'Z'));
+  const wfs = S.graph.nodes.filter((n) => n.category === 'workflows').sort((a, b) => a.label.localeCompare(b.label));
   if (!S.flow || !S.byId[S.flow]) S.flow = (wfs.find((w) => (w.steps || []).length) || wfs[0])?.id;
   $('#flowPicker').innerHTML = wfs.map((w) => {
-    const dot = PRI_COLOR[w.grade?.priority] || '#5a6b7d';
     const n = (w.steps || []).length;
-    return `<button class="flow-tab${w.id === S.flow ? ' active' : ''}" data-id="${w.id}"><span class="pdot" style="background:${dot}"></span>${esc(w.label)} <span style="opacity:.6">· ${n} step${n === 1 ? '' : 's'}</span></button>`;
+    return `<button class="flow-tab${w.id === S.flow ? ' active' : ''}" data-id="${w.id}">${esc(w.label)} <span style="opacity:.6">· ${n} step${n === 1 ? '' : 's'}</span></button>`;
   }).join('');
   $$('#flowPicker .flow-tab').forEach((b) => b.addEventListener('click', () => { S.flow = b.dataset.id; renderFlows(); }));
   drawFlow(S.byId[S.flow]);
@@ -253,12 +224,14 @@ function stepCard(s, num) {
   const tags = [
     s.role ? `<span class="fs-tag role" ${roleId ? `data-id="${roleId}"` : ''} style="border-color:${rc}"><span class="sw" style="background:${rc}"></span>${esc(s.role)}</span>` : '',
     s.tool ? `<span class="fs-tag" ${toolId ? `data-id="${toolId}"` : ''} style="background:${tc}"><span class="sw" style="background:#0b0e12"></span>${esc(s.tool)}</span>` : '',
+    s.record ? `<span class="fs-tag record">${esc(s.record)}</span>` : '',
   ].join('');
   const numTxt = isDecision ? '⎇' : (num != null ? num : '•');
+  const excLines = (s.exceptions || []).map((e) => `<div class="fs-note fs-exc-note">⚠ <b>${esc(e.kind)}:</b> ${esc(e.text)}</div>`).join('');
   return `<div class="flow-step${s.exception ? ' exception' : ''}${isDecision ? ' decision' : ''}" style="border-left-color:${rc}">
       <div class="fs-top"><span class="fs-num">${numTxt}</span><span class="fs-action">${esc(s.action)}</span>
         ${s.exception ? '<span class="fs-exc">⚠ exception</span>' : ''}<span class="fs-tags">${tags}</span></div>
-      ${s.note ? `<div class="fs-note">${esc(s.note)}</div>` : ''}</div>`;
+      ${s.note ? `<div class="fs-note">${esc(s.note)}</div>` : ''}${excLines}</div>`;
 }
 function renderStepTree(steps) {
   // children with a branch label = parallel branches; unlabeled children = sequential continuation
@@ -286,8 +259,11 @@ function drawFlow(wf) {
     legend.innerHTML = '';
     body.innerHTML = `<div class="flow-empty"><b>${esc(wf.label)}</b> has no mapped steps yet.<br><br>
       Add them to the page's <b>## SOP</b> section, then reload:<br><br>
-      <code>- [ ] **Action** — \`Role\` uses \`Tool\` — note</code><br>
-      <code>&nbsp;&nbsp;- [ ] **(if X)** **Action** — \`Role\` uses \`Tool\` — ⚠ note</code> &nbsp;(indent to branch; ⚠ = exception)<br><br>
+      <code>- [ ] **&lt;Action verb&gt;** — &lt;role&gt; uses &lt;tool&gt; on &lt;record&gt; — &lt;produces what&gt;</code><br>
+      <code>&nbsp;&nbsp;- Exception: &lt;what can go wrong&gt; → &lt;how it's handled&gt;</code><br>
+      <code>&nbsp;&nbsp;- Escalate: &lt;condition&gt; → &lt;who/where&gt;</code><br><br>
+      The tool may be a plain name or a markdown link like <code>[tool-slug](../tools/tool-slug.md)</code>;
+      Exception / Escalate sub-bullets attach to the step above them.<br><br>
       <button class="seg" id="flowOpen">Open ${esc(wf.label)} to edit</button></div>`;
     $('#flowOpen')?.addEventListener('click', () => openPage(wf.id));
     return;
@@ -311,25 +287,15 @@ async function openPage(id) {
   $$('.tree-item').forEach((t) => t.classList.toggle('active', t.dataset.id === id));
   const data = await api('/api/file?path=' + encodeURIComponent(id));
   $('#phTitle').textContent = node.label; $('#phPath').textContent = id;
-  $('#phCrumbs').innerHTML = `<b>${node.category}</b>`; $('#phChips').innerHTML = gradeChips(node);
+  $('#phCrumbs').innerHTML = `<b>${node.category}</b>`; $('#phChips').innerHTML = pageChips(node);
   setMode('read');
   $('#pageEdit').value = data.content; $('#pageRender').innerHTML = marked.parse(data.content);
   wikifyLinks($('#pageRender'), id); renderMermaidBlocks($('#pageRender'));
   $('#saveState').textContent = ''; $('#saveState').className = 'save-state'; $('#main').scrollTop = 0;
 }
-function gradeChips(node) {
-  const g = node.grade; if (!g) return '<span class="chip">ungraded</span>';
-  const o = [];
-  if (g.priority) o.push(`<span class="chip pill" style="background:${PRI_COLOR[g.priority]}">${g.priority}</span>`);
-  if (g.maturityLevel) o.push(`<span class="chip">Maturity <b>L${g.maturityLevel}</b></span>`);
-  if (g.lever) o.push(`<span class="chip">Lever <b>${g.lever}</b></span>`);
-  if (g.bindingC) o.push(`<span class="chip">C <b>${g.bindingC}</b></span>`);
-  if (g.koodar) o.push(`<span class="chip">KOODAR <b>${g.koodar}</b></span>`);
-  if (g.aiStage) o.push(`<span class="chip">AI stage <b>${g.aiStage}</b></span>`);
-  if (g.friction) o.push(`<span class="chip pill" style="background:${FRICTION_COLOR[g.friction]}">friction: ${g.friction}</span>`);
-  if (g.readiness) o.push(`<span class="chip pill" style="background:${READY_COLOR[g.readiness]}">${g.readiness}</span>`);
-  if (g.status) o.push(`<span class="chip">${g.status}</span>`);
-  return o.join('');
+// Derived page chips — currently just the stub flag (detected from content).
+function pageChips(node) {
+  return node.stub ? '<span class="chip">stub</span>' : '';
 }
 function setMode(mode) {
   const read = mode === 'read';
@@ -357,9 +323,6 @@ async function renderMermaidBlocks(container) {
     code.closest('pre').replaceWith(div);
   }
 }
-// Grades are display-only here (chips on the page header + dashboard/map colors).
-// They are written by the ai-ops consultant to .ai-ops/navigator-grades.json.
-
 // ---- save file -------------------------------------------------------------
 async function saveFile() {
   const id = S.current; if (!id) return;
@@ -369,7 +332,7 @@ async function saveFile() {
   S.dirty = false; $('#btnSave').disabled = true;
   await refreshGraph();
   const node = S.byId[id];
-  $('#phTitle').textContent = node.label; $('#phChips').innerHTML = gradeChips(node);
+  $('#phTitle').textContent = node.label; $('#phChips').innerHTML = pageChips(node);
   $('#pageRender').innerHTML = marked.parse(content); wikifyLinks($('#pageRender'), id); renderMermaidBlocks($('#pageRender'));
   $$('.tree-item').forEach((t) => t.classList.toggle('active', t.dataset.id === id));
   $('#saveState').textContent = 'Saved'; $('#saveState').className = 'save-state saved';

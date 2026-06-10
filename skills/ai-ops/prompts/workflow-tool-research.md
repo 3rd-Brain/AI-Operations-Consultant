@@ -54,16 +54,14 @@ Write the full per-tool research to `{{output_root}}/.ai-ops/research/{{workflow
 **Existing integrations:**
 - <Platform>: <what's available — link if found>
 **Integration walls:** <limits, locked features>
-**SOP steps that use this tool:** <list the step numbers from the SOP>
-
-## Records in this tool
-
+**SOP steps that use this tool:** <quote the step action verbs from the SOP — the SOP is an unnumbered checklist>
+**Records in this tool:**
 - **<record-slug>** — <description of what this record represents>
 - **<record-slug>** (Synced from <tool-slug>) — <description>
 - **<record-slug>** (Exported to <tool-slug>) — <description>
 - **<record-slug>** (Bidirectional sync with <tool-slug>) — <description>
 
-*(Omit this section if no business records are owned or touched by this tool. Do not link to `records/<slug>.md` — that path does not exist. Reference owning tool files or `data-architecture.md` when cross-tool context is needed.)*
+*(Omit the records list if no business records are owned or touched by this tool. Keeping records inside the tool's section — not as a sibling heading — keeps them attached to their tool in multi-tool files. Do not link to `records/<slug>.md` — that path does not exist. Reference owning tool files or `data-architecture.md` when cross-tool context is needed.)*
 ~~~
 
 Do not return the per-tool research inline.

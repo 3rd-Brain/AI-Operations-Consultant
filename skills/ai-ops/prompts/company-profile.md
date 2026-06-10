@@ -116,7 +116,7 @@ For the prioritized list of goals and problems, see [.ai-ops/pains-and-bottlenec
 
 ## Output
 
-Write the completed profile document to `{{output_root}}/profile.md` using the Write tool. Do not return the document inline.
+If `{{output_root}}/profile.md` already exists, first copy it unchanged to `{{output_root}}/.ai-ops/profile-history/<today's date YYYY-MM-DD>.md` (create the folder if needed) — the profile is a living document and the snapshot is its only undo. Then write the completed profile document to `{{output_root}}/profile.md` using the Write tool. Do not return the document inline.
 
 ## What to return
 
