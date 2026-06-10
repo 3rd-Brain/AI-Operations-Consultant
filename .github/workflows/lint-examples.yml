@@ -1,0 +1,26 @@
+name: lint
+
+# Runs the template-completeness lint's own tests (and a syntax check on both
+# navigator scripts) on every push and pull request. Zero npm dependencies, so
+# there's nothing to install — just Node built-ins.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check navigator scripts
+        run: |
+          node --check skills/ai-ops/scripts/navigator/lint.mjs
+          node --check skills/ai-ops/scripts/navigator/server.mjs
+      - name: Run lint tests (complete + gappy fixtures)
+        # Unquoted so bash expands the glob — works regardless of Node's own glob support.
+        run: node --test skills/ai-ops/scripts/navigator/test/*.test.mjs

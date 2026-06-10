@@ -117,7 +117,7 @@ Five views:
 
 | View | What you see |
 |---|---|
-| **🏠 Dashboard** | Counts, library completeness (stub vs enriched), top pains, and the profile's maturity signal — all derived live from the files. Nothing here is maintained by hand; the navigator renders what the library says. |
+| **🏠 Dashboard** | Counts, library completeness (stub vs enriched), template completeness (which documents are missing required sections), top pains, and the profile's maturity signal — all derived live from the files. Nothing here is maintained by hand; the navigator renders what the library says. |
 | **👥 Org & Roles** | An org chart built from each role doc's `Reports to:` field, with the workflows each role owns. |
 | **🔀 Workflow Maps** | Every SOP as a color-coded step flow — who does each step, with which tool, on which record, with exception paths flagged. |
 | **📄 Pages** | Every markdown file rendered (Mermaid diagrams live), with edit-in-place that saves back to disk. |
@@ -126,6 +126,8 @@ Five views:
 Division of labor: **the Navigator visualizes and edits; the consultant interviews, researches, and enriches.** They read and write the same files, so there's no sync step — run a session, refresh the browser, the new content is there.
 
 It binds to localhost only, validates request origins (a webpage you have open can't write to your library), and only ever writes markdown inside the folder you point it at.
+
+**Structure is checked by a script, not by eye.** A document can render perfectly and still be missing whole sections — a workflow with no Automation / Agent Potential section, a role with no Infinite Tasks. So `scripts/navigator/lint.mjs` derives the required sections straight from the templates and reports exactly which documents are missing which sections (`node scripts/navigator/lint.mjs "<your-library>"`, exit 1 on gaps). The Navigator runs it at startup and shows it as the Dashboard's Template completeness card; you can also drop `scripts/hooks/pre-commit` into your library repo to block commits that ship gapped documents. The script owns *is the section there*; the consultant owns *is the section any good* — placeholder prose, evidence, reasoned targets.
 
 ## 8. The payoff: documentation → working automation
 

@@ -140,6 +140,8 @@ async function renderDashboard() {
         <div class="bar"><span style="width:${libT ? Math.round((libD / libT) * 100) : 0}%"></span></div>
         <div style="margin-top:10px">${CAT_ORDER.filter((c) => counts[c]).map((c) => `<div class="kv"><span class="k">${c}</span><span>${counts[c].d}/${counts[c].t}</span></div>`).join('')}</div></div>
       <div class="card"><h3>Maturity Signal</h3><div class="card-prose" id="dashMaturity"><span style="color:var(--muted)">No Maturity signal section in profile.md yet.</span></div></div>
+      <div class="card card-wide" id="cardLint"><h3>Template completeness</h3>
+        <div id="lintBody"><span style="color:var(--muted)">Checking documents against their templates…</span></div></div>
     </div>
     <div class="section-title">Top pains</div>
     <div class="dash-pains markdown" id="dashPains"><span style="color:var(--muted)">No .ai-ops/pains-and-bottlenecks.md yet.</span></div>`;
@@ -161,6 +163,36 @@ async function renderDashboard() {
     if (c) {
       const bullets = c.content.split('\n').filter((l) => /^\s*[-*]\s+\S/.test(l)).slice(0, 5);
       $('#dashPains').innerHTML = bullets.length ? marked.parse(bullets.join('\n')) : '<span style="color:var(--muted)">No bullet items in pains-and-bottlenecks.md yet.</span>';
+    }
+  }
+  // Template completeness = structure check, derived live from /api/lint. The script
+  // owns "are the required sections present?"; the consultant owns "are they substantive?".
+  const lint = await api('/api/lint').catch(() => null);
+  const lb = $('#lintBody');
+  if (lint && lb) {
+    const { complete, linted, incomplete } = lint.summary;
+    if (!linted) {
+      lb.innerHTML = '<span style="color:var(--muted)">No documents with a canonical template in this library yet.</span>';
+    } else {
+      const pct = Math.round((complete / linted) * 100);
+      const head = `<div class="metric">${complete}<small> / ${linted} match their template</small></div>
+        <div class="bar"><span style="width:${pct}%${incomplete ? ';background:var(--weak)' : ''}"></span></div>`;
+      let detail;
+      if (!incomplete) {
+        detail = '<div class="lint-allgood">✓ Every document has all its required sections.</div>';
+      } else {
+        detail = '<div class="lint-detail">' + lint.files.filter((f) => !f.ok).map((f) => {
+          const chips = [
+            ...f.missingSections.map((s) => `<span class="chip lint-miss">${esc(s.text)}</span>`),
+            ...f.missingFields.map((x) => `<span class="chip lint-miss">${esc(x)} field</span>`),
+          ].join('');
+          return `<div class="lint-file"><span class="lint-file-name" data-id="${esc(f.path)}">${esc(f.path)}</span><span class="lint-chips">${chips}</span></div>`;
+        }).join('') + '</div>';
+      }
+      lb.innerHTML = head + detail;
+      $$('#lintBody .lint-file-name').forEach((e) => {
+        if (S.byId[e.dataset.id]) { e.classList.add('lintlink'); e.addEventListener('click', () => openPage(e.dataset.id)); }
+      });
     }
   }
 }

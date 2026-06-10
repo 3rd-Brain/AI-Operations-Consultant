@@ -12,6 +12,7 @@ import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { lintLibrary, formatReport } from './lint.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -470,6 +471,10 @@ const server = createServer(async (req, res) => {
   try {
     if (p === '/api/graph') return send(res, 200, await buildGraph());
 
+    // Template-completeness lint — recomputed live from the files + templates, no cache.
+    // Structure is the script's job here; the library-assembly specialist judges substance.
+    if (p === '/api/lint') return send(res, 200, await lintLibrary(ROOT));
+
     if (p === '/api/file' && req.method === 'GET') {
       const rel = url.searchParams.get('path') || '';
       const abs = safeResolve(rel);
@@ -528,4 +533,10 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  AI-Ops Navigator`);
   console.log(`  workspace : ${ROOT}`);
   console.log(`  open      : http://localhost:${PORT}\n`);
+  // Run the template-completeness lint once at spin-up so structural gaps are visible
+  // in the console immediately (the dashboard's "Template completeness" card shows the
+  // same data, recomputed per request from /api/lint).
+  lintLibrary(ROOT)
+    .then((report) => { console.log(formatReport(report)); console.log(''); })
+    .catch((err) => console.error(`  lint: ${err && err.message || err}\n`));
 });
