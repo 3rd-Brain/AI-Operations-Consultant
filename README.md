@@ -1,6 +1,6 @@
 ![version](https://img.shields.io/badge/version-3.2.0-blue) ![license](https://img.shields.io/badge/license-GPL--3.0-blue) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
-[Methodology](#methodology) · [Examples](#examples) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
+[Walkthrough](WALKTHROUGH.md) · [Methodology](#methodology) · [Examples](#examples) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
 
 # AI Operations Consultant
 
