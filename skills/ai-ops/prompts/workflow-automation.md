@@ -78,6 +78,6 @@ Read the existing workflow file at `{{workflow_file_path}}`. Append the complete
    - **Type:** tool / workflow
    - **Slug:** e.g. `zapier`, `quote-follow-up`
    - **Purpose:** one line — what it is and why it matters to this automation plan
-   - **Exists:** yes / no (based on the existing library files provided in context)
+   - **Exists:** yes / no / unknown — answer yes or no only when context supplied to you settles it; otherwise return unknown rather than guessing. The orchestrator resolves unknown flags against the library on disk before assembly.
 4. **Pains surfaced** — friction discovered while mapping automation that didn't surface during the SOP step
 5. **Open questions** — anything that needs user input or tool verification before the plan is final

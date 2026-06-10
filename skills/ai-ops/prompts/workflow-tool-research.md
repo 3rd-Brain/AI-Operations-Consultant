@@ -77,7 +77,7 @@ Do not return the per-tool research inline.
    - **Type:** record
    - **Slug:** e.g. `event-project`, `event-quote`
    - **Purpose:** one line — what the record represents
-   - **Exists:** yes / no (based on the existing library files provided in context)
+   - **Exists:** yes / no / unknown — answer yes or no only when context supplied to you settles it; otherwise return unknown rather than guessing. The orchestrator resolves unknown flags against the library on disk before assembly.
    
    Record entries here are traceability only — the orchestrator folds them into the owning tool's `## Records in this tool` section. No per-record stub files are created. Do not reference `records/<slug>.md` paths anywhere in your output.
 5. **Deltas from prior research** — if `{{existing_research}}` was supplied, list specific changes you confirmed since it was gathered (new features, deprecated endpoints, plan changes, new integrations, new MCPs). One line per delta. Skip this section if no prior research was supplied.

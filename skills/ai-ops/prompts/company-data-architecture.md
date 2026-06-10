@@ -90,6 +90,6 @@ Write the completed data architecture document to `{{output_root}}/data-architec
    - **Type:** tool / record
    - **Slug:** e.g. `attio`, `corporate-order`
    - **Purpose:** one line
-   - **Exists:** yes / no — for tools: whether the stub file exists. For records: whether the record is mentioned in the owning tool's `## Records in this tool` section or in `data-architecture.md` itself. (The orchestrator uses record references to fold them into the owning tool stub — no per-record files are created.)
+   - **Exists:** yes / no / unknown — for tools: whether the stub file exists. For records: whether the record is mentioned in the owning tool's `## Records in this tool` section or in `data-architecture.md` itself. Answer yes or no only when context supplied to you settles it; otherwise return unknown rather than guessing — the orchestrator resolves unknown flags against the library on disk before assembly. (The orchestrator uses record references to fold them into the owning tool stub — no per-record files are created.)
 3. **Pains surfaced** — fragmentation and manual-bridge pains, summarized with impact
 4. **Open questions** — anything that requires user input or tool verification before the architecture is final

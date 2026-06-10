@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.1 — 2026-06-10
+
+Chain-wiring fixes from the 2026-06-10 repo audit (issues #13–#18, #23).
+
+### Fixed
+
+- **Library assembly** — added the missing `workflow-tool-research` deliverable type with its required sections (#13); renamed `{{library_root}}` → `{{output_root}}` to match what SKILL.md instructs the orchestrator to pass (#14); the `state.md` control-file check now states the required structure inline instead of pointing at a template the subagent never receives (#15); unresolved `exists: unknown` references are reported as failures, not silently skipped.
+- **Specialist dispatch** — SKILL.md now carries a per-specialist context-variables table covering every `{{variable}}` the prompts require, with sources for `{{maturity_level}}`, `{{today}}`, `{{existing_library}}`, and `{{session_goal}}`; `roadmap.md` and `build-scope.md` now declare `{{today}}` in their context blocks (#16).
+- **Exists flags** — the four specialists that receive no library context (workflow tool research, workflow automation, company stack research, company data architecture) now return `exists: unknown` instead of guessing; the orchestrator resolves unknowns against the library on disk before assembly (#18).
+- **Build scope** — Records section link fixed (`../tools/` from `scopes/`); stale V1 "record files" wording corrected to "tool files" (#17).
+- **Playbook INDEX** — stripped private workspace paths and a stale authoring note from the public reference (#23).
+
 ## 3.1.0 — 2026-06-04
 
 ### Added

@@ -187,6 +187,8 @@ Five canonical failure patterns users hit when leveling up. Use these to diagnos
 **Output root:** {{output_root}}
 *(per-company library base path — your output file goes to {{output_root}}/roadmaps/<scope-slug>-<goal-slug>-{{today}}.md)*
 
+**Today's date:** {{today}}
+
 ## Your job
 
 Apply the four frameworks to the library evidence and produce a roadmap that moves the chosen scope from its current Level to the target Level, anchored to the user's stated goal. Every project you prescribe must be grounded in library evidence and trace back to that goal. Inferences without evidence go to open questions.

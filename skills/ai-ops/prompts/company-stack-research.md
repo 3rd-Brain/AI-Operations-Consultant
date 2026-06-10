@@ -69,7 +69,7 @@ Do not return the per-tool research inline.
    - **Type:** record
    - **Slug:** e.g. `event-project`, `event-quote`
    - **Purpose:** one line
-   - **Exists:** yes / no — whether the record is already mentioned in the owning tool's `## Records in this tool` section or in `data-architecture.md`. (The orchestrator uses these references to fold records into the owning tool stub — no per-record files are created.)
+   - **Exists:** yes / no / unknown — whether the record is already mentioned in the owning tool's `## Records in this tool` section or in `data-architecture.md`. Answer yes or no only when context supplied to you settles it; otherwise return unknown rather than guessing — the orchestrator resolves unknown flags against the library on disk before assembly. (The orchestrator uses these references to fold records into the owning tool stub — no per-record files are created.)
 4. **Gaps** — SOP-relevant or workflow-relevant steps where a tool has no API or integration path (these become human-only steps for now)
 5. **Deltas from prior research** — if `{{existing_research}}` was supplied, list specific changes you confirmed since it was gathered (new features, deprecated endpoints, plan changes, new integrations, new MCPs). One line per delta. Skip this section if no prior research was supplied.
 6. **Open questions** — anything you couldn't confirm that needs verification

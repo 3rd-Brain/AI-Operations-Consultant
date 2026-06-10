@@ -2,11 +2,11 @@
 
 Chapter-level reference files for the Digital Operations Playbook (print final). Each file holds the verbatim text of its section. Agent loads only the file relevant to the current task.
 
-**Source:** `Projects/DigiOps/Digital Ops Newsletter/Digital Operations Playbook Print FINAL FORMATTED.docx`
+**Source:** split from the published Digital Operations Playbook (print final).
 
 **Skipped from the book:**
 - Chapter 5 (Roadmap / 4-Phase Level Up) — deferred
-- "The 4 Stages of AI Automation" (Advanced Whitepaper appendix) — superseded by KOODAR's six capability levels (`Projects/DigiOps/digital-labor-revolution/_config/koodar.md`)
+- "The 4 Stages of AI Automation" (Advanced Whitepaper appendix) — superseded by KOODAR's six capability levels (see `SUMMARIES.md`)
 
 ## Topic → file map
 
@@ -31,4 +31,4 @@ Chapter-level reference files for the Digital Operations Playbook (print final).
 
 ## Note
 
-The executive summaries of every framework live separately at `references/playbook/SUMMARIES.md` — designed to be embedded in the main agent's system prompt. That file is co-authored with Michael; don't create it as part of this split.
+The executive summaries of every framework live separately at `references/playbook/SUMMARIES.md` — designed to be embedded in the main agent's system prompt.

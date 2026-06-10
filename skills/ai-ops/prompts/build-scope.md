@@ -91,6 +91,8 @@ workspace/
 **Output root:** {{output_root}}
 *(per-company library base — your output file goes to {{output_root}}/scopes/<build-slug>-{{today}}.md)*
 
+**Today's date:** {{today}}
+
 ## Your job
 
 The workflow file identifies an automation opportunity. The orchestrator and user have already picked the specific target and the stack. Translate those into a self-contained scope document a builder can execute against in one sitting.
@@ -99,7 +101,7 @@ The scope is the spec, not the build. It describes what gets built, with what to
 
 ## How to work
 
-1. **Read the inputs as a whole, not as separate documents.** The workflow file says where the automation fits in the SOP. The tool research says what the chosen tools can actually do. The record files say what data shapes the build touches. The profile says how big the company is and what's already in their stack. The stack contract says which tools to use. Each input constrains the scope; reconcile them before writing.
+1. **Read the inputs as a whole, not as separate documents.** The workflow file says where the automation fits in the SOP. The tool research says what the chosen tools can actually do. The tool files say what data shapes the build touches. The profile says how big the company is and what's already in their stack. The stack contract says which tools to use. Each input constrains the scope; reconcile them before writing.
 
 2. **Confirm the automation target is buildable.** The workflow's Automation / Agent Potential section must name the target with enough substance to scope from. If the section is empty, the target isn't mentioned, or the workflow file is a stub, refuse and return "run the workflow chain on this workflow first" — do not produce a half-baked scope.
 
@@ -176,7 +178,7 @@ Every external surface the build touches, with the auth pattern and the endpoint
 
 The data shapes the build reads or writes. Each record reference grounds in the owning tool's `## Records in this tool` section or in `data-architecture.md` — there are no standalone record files.
 
-- **<record-slug>** — read / write / both · Source of truth: [<tool-slug>.md](tools/<tool-slug>.md) · Shape: <typed fields or pointer to the Records section in the tool file>
+- **<record-slug>** — read / write / both · Source of truth: [<tool-slug>.md](../tools/<tool-slug>.md) · Shape: <typed fields or pointer to the Records section in the tool file>
 
 ## Implementation notes
 
