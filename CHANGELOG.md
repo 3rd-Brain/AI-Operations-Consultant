@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.2 — 2026-06-10
+
+### Fixed
+
+- **Navigator sidebar no longer hides unknown categories.** The tree rendered only a hardcoded category list, so glossary, context, research, and any other library folders existed in the graph but were invisible in the UI. Known categories render in order first; everything else appends alphabetically — nothing in the library is invisible.
+
 ## 3.2.1 — 2026-06-10
 
 ### Fixed

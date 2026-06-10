@@ -8,7 +8,7 @@ const CAT_COLOR = {
   profile: '#d4a23a', roles: '#5a9bd4', tools: '#9b7fd4', workflows: '#3fb950',
   scopes: '#e08c4a', roadmaps: '#4ac9c9', decisions: '#c96a8c', ops: '#6b7785', meetings: '#7d8a4a', other: '#6b7785',
 };
-const CAT_ORDER = ['profile', 'workflows', 'roles', 'tools', 'scopes', 'roadmaps', 'decisions', 'ops', 'meetings', 'other'];
+const CAT_ORDER = ['profile', 'context', 'glossary', 'data architecture', 'open questions', 'workflows', 'roles', 'tools', 'scopes', 'roadmaps', 'decisions', 'ops', 'meetings', 'other'];
 const _cc = {};
 function colorFor(name, light = 60) {
   if (!name) return '#6b7785';
@@ -66,7 +66,8 @@ const CREATABLE = ['roles', 'tools', 'workflows', 'decisions', 'scopes', 'roadma
 function renderTree() {
   const tree = $('#tree'); tree.innerHTML = '';
   const groups = {}; S.graph.nodes.forEach((n) => (groups[n.category] ||= []).push(n));
-  const cats = CAT_ORDER.filter((c) => groups[c] || CREATABLE.includes(c)); // show creatable cats even when empty
+  const extra = Object.keys(groups).filter((c) => !CAT_ORDER.includes(c)).sort();
+  const cats = [...CAT_ORDER.filter((c) => groups[c] || CREATABLE.includes(c)), ...extra]; // known order first, then any other library folders — nothing invisible
   for (const cat of cats) {
     const g = document.createElement('div'); g.className = 'tree-group'; g.dataset.cat = cat;
     const label = document.createElement('div'); label.className = 'grp-label';
