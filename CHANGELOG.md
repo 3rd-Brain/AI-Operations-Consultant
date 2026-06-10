@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.1 — 2026-06-10
+
+### Fixed
+
+- **Navigator:** root-level library files no longer all render under the Profile group — `profile.md` is the profile; `glossary.md`, `data-architecture.md`, and `open-questions.md` get their own groups; other root files (e.g. a venture's `CONTEXT.md`) group as Context. Previously three root files read as "three profiles."
+
 ## 3.2.0 — 2026-06-10
 
 Navigator overhaul + library hygiene, from the 2026-06-10 repo audit (issues #10–#12, #19–#25).

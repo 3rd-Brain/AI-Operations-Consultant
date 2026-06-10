@@ -261,8 +261,19 @@ async function walk(dir, base = '') {
 }
 
 function categoryOf(rel) {
-  const dir = path.posix.dirname(rel.split(path.sep).join('/'));
-  const top = dir === '.' ? '.' : dir.split('/')[0];
+  const norm = rel.split(path.sep).join('/');
+  const dir = path.posix.dirname(norm);
+  if (dir === '.') {
+    // Root-level files categorize by filename, not as one lump:
+    // only profile.md is the profile; the rest get their own groups.
+    const base = path.posix.basename(norm).toLowerCase();
+    if (base === 'profile.md') return 'profile';
+    if (base === 'glossary.md') return 'glossary';
+    if (base === 'data-architecture.md') return 'data architecture';
+    if (base === 'open-questions.md') return 'open questions';
+    return 'context';
+  }
+  const top = dir.split('/')[0];
   return CATEGORIES[top] || top || 'other';
 }
 
