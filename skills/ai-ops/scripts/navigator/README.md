@@ -59,3 +59,43 @@ to the consultant). Stop with Ctrl-C.
   is under ~200 characters.
 - **System map** — a ` ```mermaid ` block in `data-architecture.md` renders as a live
   diagram when the page is opened.
+
+## Template completeness (structure lint)
+
+`lint.mjs` checks that every templated library document carries the sections and header
+fields its template declares — `profile.md`, `glossary.md`, `open-questions.md`, and
+everything under `roles/`, `tools/`, `workflows/`. It derives the requirements by parsing
+`../../templates/*.md` at runtime, so the templates stay the single source of truth (no
+second manifest to drift). It checks **structure, not substance**: a deferred doc with all
+its sections present and one-line bodies passes — judging whether a section is actually
+substantive is the `ai-ops` consultant's job, not the script's. `data-architecture.md` and
+other untemplated folders (research/, decisions/, scopes/, roadmaps/, `.ai-ops/`) aren't
+linted. Zero dependencies, Node built-ins only.
+
+```bash
+node skills/ai-ops/scripts/navigator/lint.mjs "<company-library-dir>"      # human report
+node skills/ai-ops/scripts/navigator/lint.mjs "<company-library-dir>" --json
+# exit 0 = every document matches its template · exit 1 = gaps (report names the file + sections)
+```
+
+The navigator runs this lint at spin-up (printed to the console) and serves it live at
+`GET /api/lint`; the dashboard's **Template completeness** card shows "N of M documents
+match their template" with each incomplete file's missing sections as chips. Like
+everything else the navigator shows, it's recomputed from the files per request and stores
+no state of its own.
+
+### Commit hook (block gaps before they land)
+
+`../hooks/pre-commit` is a portable POSIX hook for your **library** repo (the per-company
+library, usually your own repo — not this one). It lints the staged library documents and
+blocks the commit if any are missing required sections.
+
+```bash
+cp skills/ai-ops/scripts/hooks/pre-commit <your-library-repo>/.git/hooks/pre-commit
+chmod +x <your-library-repo>/.git/hooks/pre-commit
+# tell it where lint.mjs lives if it's not at the default install path:
+export AI_OPS_LINT="$HOME/.claude/skills/ai-ops/scripts/navigator/lint.mjs"
+```
+
+Bypass one commit with `LINT_SKIP=1 git commit ...`. If it can't find `lint.mjs` or `node`,
+it prints how to fix it and allows the commit (a missing linter never wedges your commits).

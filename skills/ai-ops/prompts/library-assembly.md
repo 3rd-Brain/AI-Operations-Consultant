@@ -23,13 +23,23 @@ This prompt runs as the final step of any chain (company, workflow, role). It re
 ## Job
 
 1. **Verify every deliverable file exists** at the claimed path. Report missing files as failures.
-2. **Validate template adherence** for each deliverable — read the file, confirm it contains the required section headings for its type.
-3. **For every reference where `exists: no`,** write a stub at the appropriate path using the matching template. Pre-fill stub fields from matching research where available (see Enrichment rules below). If a reference arrives with `exists: unknown` (the orchestrator should have resolved these before dispatch), do not stub it — report it as a failure so the orchestrator can resolve and re-dispatch.
-4. **Verify the control files.** Confirm `.ai-ops/state.md` matches the state template structure — `**Last session:**` and `**Current focus:**` field lines followed by `## Pointers` and `## Next actions` sections — and is within ~300 tokens. Confirm `open-questions.md` is a flat worklist (no IDs, no status fields, no "Answered" section) with pointers that resolve. Report violations as failures — do not rewrite content.
+2. **Validate template adherence (structure).** Run the deterministic lint when you have shell access — it parses the templates and reports exactly which required sections/fields each document is missing:
+
+   ```bash
+   node "<this-skill's-dir>/scripts/navigator/lint.mjs" "{{output_root}}"
+   ```
+
+   Exit 0 = every templated document has all its required sections; exit 1 = gaps (the report names the file and the missing sections). Treat a non-zero exit as a verification failure and surface the missing sections verbatim. If you have **no** shell access, fall back to reading each deliverable and checking it against the "Required sections per deliverable type" list below by hand. Either way, structural completeness is a checklist — don't eyeball it loosely.
+3. **Judge substance (your real job).** The lint only proves the headings exist. You own whether the content under them is real:
+   - **Placeholder prose** — flag sections still carrying template scaffolding (`<...>` slots, "Action verb", "Narrative.", a lone `-`) or one-line filler where the deliverable type expects substance.
+   - **Evidence grounding** — claims in profile/workflow/role docs should trace to the conversation or research, not invention. Flag unsupported specifics.
+   - **Reasoned KOODAR targets** — a workflow's `Target KOODAR level` and a role's KOODAR breakdown should reflect the actual situation, not a default. Flag rote or contradictory targets.
+4. **For every reference where `exists: no`,** write a stub at the appropriate path using the matching template. Pre-fill stub fields from matching research where available (see Enrichment rules below). If a reference arrives with `exists: unknown` (the orchestrator should have resolved these before dispatch), do not stub it — report it as a failure so the orchestrator can resolve and re-dispatch.
+5. **Verify the control files.** Confirm `.ai-ops/state.md` matches the state template structure — `**Last session:**` and `**Current focus:**` field lines followed by `## Pointers` and `## Next actions` sections — and is within ~300 tokens. Confirm `open-questions.md` is a flat worklist (no IDs, no status fields, no "Answered" section) with pointers that resolve. Report violations as failures — do not rewrite content.
 
 ## Required sections per deliverable type
 
-Match section names by prefix, not exact string — produced headings may carry suffixes (e.g. `Flowchart — ASCII (for humans)`) and sit at H2 or H3.
+This is the **manual fallback** for when you have no shell access — when you can run the lint (Job step 2), it derives the same requirements straight from `templates/*.md` and is authoritative. Match section names by prefix, not exact string — produced headings may carry suffixes (e.g. `Flowchart — ASCII (for humans)`) and sit at H2 or H3.
 
 - **profile:** What we do · Org shape · Stack · Key records · Workflows · Primary goal · Top pains · Recent timeline · Maturity signal · Pointer
 - **data-architecture:** Architecture — ASCII · Architecture — Mermaid · Sources of truth · Manual bridges · Fragmentation points

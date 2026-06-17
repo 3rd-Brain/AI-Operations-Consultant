@@ -344,6 +344,8 @@ Every engagement writes to a per-company (or department) library in the user's w
 
 When creating library files, use the templates at `templates/`: `profile.md`, `role.md`, `workflow.md`, `tool.md`, `glossary.md`, `state.md`, `open-questions.md`. (`data-architecture.md` has no standalone template — its structure lives in `prompts/company-data-architecture.md`.)
 
+**Structure is script-checked; substance is specialist-checked.** Whether a document has every required section/field is a deterministic job, not a judgment call — run `node scripts/navigator/lint.mjs "{{output_root}}"` (zero dependencies; it parses `templates/*.md` so the templates stay the single source of truth) and it reports any document missing sections, exit 1 on gaps. The library-assembly specialist then judges what the lint can't: whether each section is actually substantive (no placeholder prose), grounded in evidence, and carrying reasoned KOODAR targets. Don't check structure by eyeballing — that's what drifts under pressure.
+
 ### Navigator (visual review UI)
 
 When the operator wants to *see* the whole library — review it, edit it, or hand it to their team — launch the local navigator pointed at their library. The navigator ships inside this skill at `scripts/navigator/` (relative to the directory containing this SKILL.md):
@@ -353,7 +355,7 @@ ROOT="{{output_root}}" node "<this-skill's-directory>/scripts/navigator/server.m
 # then share http://localhost:4173
 ```
 
-Resolve `<this-skill's-directory>` to wherever this skill is installed (e.g. `~/.claude/skills/ai-ops`). If the `scripts/navigator/` folder isn't present in this installation, say so and continue without it — the navigator is optional.
+Resolve `<this-skill's-directory>` to wherever this skill is installed (e.g. `~/.claude/skills/ai-ops`). If the `scripts/navigator/` folder (or its `server.mjs`) isn't present, the install is **incomplete or out of date** — the navigator has shipped with the skill since v3.2.0. Do **not** reconstruct `server.mjs` from this description; a hand-rebuilt server will not match the real one. Instead, tell the operator their install is missing the navigator and to update it (re-copy the skill from the repo — `git pull && cp -r skills/ai-ops ~/.claude/skills/`, per INSTALL.md), then continue without it — the navigator is optional.
 
 It renders the library as a wiki + dashboard, an org chart (from each role's `Reports to`), and color-coded workflow step-maps (from each workflow's `## SOP`). Everything on the dashboard is derived live from the library files — counts, completeness, top pains, the profile's maturity signal. It reads and writes the same library files; there is no separate data store and nothing to maintain. Localhost only; markdown writes only. See `scripts/navigator/README.md`.
 
