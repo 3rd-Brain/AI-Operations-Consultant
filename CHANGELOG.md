@@ -14,6 +14,7 @@ Template-completeness lint — structure is now a deterministic script's job, su
 ### Changed
 
 - **Library assembly's verification step is now split.** `prompts/library-assembly.md` runs the lint for the structural check when shell access exists (manual section checklist as the no-shell fallback), and the specialist's job narrows explicitly to semantic judgment: placeholder-prose detection, evidence grounding, reasoned KOODAR targets. `SKILL.md` states the division — structure is script-checked, substance is specialist-checked.
+- **Navigator-missing handling hardened.** When `scripts/navigator/` is absent, `SKILL.md` now reports the install as incomplete or out of date and points to the update command, and explicitly forbids reconstructing `server.mjs` from the description — a hand-rebuilt server won't match the shipped one. (A user on a stale pre-3.2.0 install hit exactly this: their agent rebuilt a 21 KB server from the spec hint instead of flagging the gap.)
 
 ### Why
 
