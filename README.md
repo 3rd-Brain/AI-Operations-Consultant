@@ -1,4 +1,4 @@
-# FDE App
+# Forward Deployed Engineer App Skills and Plugin (Formerly AI Ops)
 
 FDE App turns Claude or Codex into your company's Forward Deployed Engineer (FDE). It documents how a company really runs, finds where work waits, loops, or depends on one person, and plans, values, and rolls out the changes that matter, in your own Claude or Codex. This plugin carries the FDE App skill and connects it to FDE App, where each company's library is kept, checked on every save, and readable in the web app.
 
