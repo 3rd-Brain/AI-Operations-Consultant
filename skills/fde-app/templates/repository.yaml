@@ -1,0 +1,7 @@
+ai_ops:
+  type: repository
+repository:
+  id: repo:<uuid>
+  role: client-current | generalized-reference
+  ai_ops_version: 4.0.1
+related_repositories: []

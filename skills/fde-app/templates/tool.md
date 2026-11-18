@@ -1,0 +1,52 @@
+---
+ai_ops:
+  id: tool:<tool-slug>
+  type: tool
+tool:
+  records: []
+  integrations: []
+---
+
+# <Tool Name>
+
+<!--
+Template for a tool document inside the company library.
+Create it when a tool needs expansion beyond
+its one-line entry in profile.md → Stack.
+Lives at tools/<tool-slug>.md in the company library.
+
+Records used by this tool are explained inline in the "## Records in this tool"
+section below. Their canonical entries remain in data-architecture.md.
+
+tool.integrations lists WIRED DATA CONNECTIONS between operating systems —
+edges where business records actually flow today. AI-assistant / chat-layer
+connectors (a Claude/ChatGPT workspace that can read many tools) are reach,
+not data relationships: keep them OUT of integrations and describe them in
+the "## Integrations" prose instead.
+-->
+
+**Website:** <url>
+**API docs:** <url or "none">
+**Plan / tier:** <what the user is currently paying for — e.g. "Pro ($49/mo)", "Free", "Enterprise">
+**Cloud or local:** <cloud SaaS | on-prem | desktop app | self-hosted>
+<!-- expected **History:** <Does it keep a dated history of the work (each record's steps with dates)? How far back? Can it be exported on this plan?> -->
+**Last updated:** YYYY-MM-DD
+
+## Purpose
+
+<1–2 sentences. What this tool does for the business and why it exists in the stack.>
+
+## Records in this tool
+
+- **<record-slug>** — <one-line description; inline notes on format / access when known>
+- **<record-slug>** (Synced from <tool-slug>) — <description>
+- **<record-slug>** (Exported to <tool-slug>) — <description>
+- **<record-slug>** (Bidirectional sync with <tool-slug>) — <description>
+
+A record without a flow tag is owned by this tool. With a flow tag, the parenthetical says where the source of truth is or where copies land. For the full cross-tool registry and fragmentation analysis, see [data-architecture.md](../data-architecture.md).
+
+## Integrations
+
+- **<Automation platform>** — <what's connected and how> (e.g. "Zapier — new row trigger sends to Slack #orders")
+- **<Native integration>** — <what it connects to natively> (e.g. "Shopify — syncs product catalog")
+- **<MCP / plugin>** — <if relevant> (e.g. "official MCP server available")

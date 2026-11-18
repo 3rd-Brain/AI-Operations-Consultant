@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "fde-app": { "type": "http", "url": "https://fde.digitaloperationsinstitute.com/mcp" }
+  }
+}

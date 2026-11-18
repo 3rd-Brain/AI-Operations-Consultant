@@ -1,0 +1,122 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "fde-app",
+  "version": "4.8.0",
+  "description": "FDE App, a Forward Deployed Engineer in your own Claude or Codex: map how a company really runs, rank what slows it down, and plan, value, and roll out improvements.",
+  "author": {
+    "name": "Digital Operations Institute",
+    "email": "michael@3rdbrain.co",
+    "url": "https://digitaloperationsinstitute.com"
+  },
+  "homepage": "https://fdeapp.digitaloperationsinstitute.com/welcome",
+  "repository": "https://github.com/3rd-Brain/AI-Operations-Consultant",
+  "license": "LicenseRef-FDE-App-License",
+  "keywords": [
+    "SOP",
+    "SOPs",
+    "workflow",
+    "workflows",
+    "automation",
+    "automations",
+    "process documentation",
+    "workflow mapping",
+    "bottlenecks",
+    "what to automate",
+    "AI implementation",
+    "business operations"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "FDE App: SOPs & Workflows",
+        "shortDescription": "Rank what to automate",
+        "longDescription": "FDE App works like a Forward Deployed Engineer inside your company: it documents how your company really runs, then ranks what slows it down and plans what to change.\n\nTalk it through, or share meeting transcripts and documents. FDE App builds a library of your company: a profile, the tools you use, where your data lives, who does what, and every workflow step by step with its own SOP. It finds where work waits, loops, or depends on one person.\n\nWhat you get:\n- SOPs: a step-by-step SOP for each workflow, written so a new hire can follow it.\n- Workflow maps: how work moves between people and tools, built from the evidence you give it.\n- Roles: who owns what, and where one person is the bottleneck.\n- Bottlenecks: a ranked list of what slows the company down.\n- Plans: a roadmap, what each change is worth in hours, and a scope for each build.\n\nYour library is kept in FDE App, checked on every save, and readable in the web app.\n\nWho it's for\nOwners, COOs and operations leads whose SOPs are missing or out of date, whose work lives in a few people's heads, and who want to know where AI or automation would help before a project starts.\n\nLimitations\nFDE App documents, maps, ranks and plans. It does not build automations, write code, configure software or do work on your platforms. What it writes is only as good as what you give it: it works from your conversations, transcripts and documents, and records gaps as open questions. You need an FDE App account and sign in with your email.",
+        "developerName": "Digital Operations Institute",
+        "category": "Business & Operations",
+        "capabilities": [],
+        "websiteURL": "https://fdeapp.digitaloperationsinstitute.com/welcome",
+        "supportURL": "https://fdeapp.digitaloperationsinstitute.com/support",
+        "privacyPolicyURL": "https://fdeapp.digitaloperationsinstitute.com/privacy",
+        "termsOfServiceURL": "https://fdeapp.digitaloperationsinstitute.com/terms",
+        "defaultPrompt": [
+          "Our SOPs are out of date. Help me document how we actually run.",
+          "Map our workflows from these meeting transcripts and show who does what.",
+          "Where is our team losing time, and what should we automate first?"
+        ],
+        "brandColor": "#7000E0",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/logo.png"
+      },
+      "publication": {
+        "release_notes": "FDE App 4.8.0: the full method for your own company, in ChatGPT and Codex."
+      },
+      "review": {
+        "commerce": false,
+        "test_cases": {
+          "positive": [
+            {
+              "description": "A new user starts",
+              "prompt": "I'm new to FDE App. Help me get started with my company.",
+              "tools_triggered": [
+                "get_help",
+                "list_companies"
+              ],
+              "expected_behavior": "Explains in a few lines what FDE App does, finds Brightline Plumbing (or asks which company and offers to create it), and asks for the first piece of evidence: a few sentences on the business and the one result wanted."
+            },
+            {
+              "description": "Map a workflow from a transcript",
+              "prompt": "Map how a service call gets booked at Brightline from this transcript: Dana (dispatcher): A customer calls, I check the calendar in ServiceTitan, book the slot, and text the tech. If it's urgent I call the tech first.",
+              "tools_triggered": [
+                "save_documents",
+                "list_documents"
+              ],
+              "expected_behavior": "Saves the transcript as a source, writes the workflow with its steps and an SOP, names who does each step, marks what was reported rather than observed, and lists open questions."
+            },
+            {
+              "description": "Answer from the library",
+              "prompt": "Who approves refunds at Brightline, and where is that written down?",
+              "tools_triggered": [
+                "search_documents",
+                "read_document"
+              ],
+              "expected_behavior": "Answers from the saved documents and cites the document and section; says plainly if the library doesn't say."
+            },
+            {
+              "description": "Rank what slows the company",
+              "prompt": "What slows Brightline down the most? Rank it.",
+              "tools_triggered": [
+                "get_engagement_state",
+                "read_document",
+                "save_documents"
+              ],
+              "expected_behavior": "Reads the saved workflows and pains, saves a ranked pains register around the one constraint, and explains the top item in a few lines."
+            },
+            {
+              "description": "What's next",
+              "prompt": "What should I do next for Brightline?",
+              "tools_triggered": [
+                "get_engagement_state",
+                "list_follow_ups"
+              ],
+              "expected_behavior": "Gives one next step with its reason, based on what the library holds and anything due."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unrelated creative writing",
+              "prompt": "Write a short poem about autumn."
+            },
+            {
+              "description": "General knowledge",
+              "prompt": "What's the capital of Australia?"
+            },
+            {
+              "description": "Data conversion with no company context",
+              "prompt": "Convert this CSV to JSON: name,phone; Ana,555-0101; Bo,555-0102"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

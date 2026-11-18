@@ -1,0 +1,34 @@
+kind: ai-ops-pack
+version: "4.8.0"
+supports_ai_ops: ">=4.0.0 <5.0.0"
+runtime:
+  node: ">=20.0.0 <25.0.0"
+artifact_types:
+  - company-profile
+  - data-architecture
+  - glossary
+  - open-question-register
+  - role
+  - workflow
+  - workflow-family
+  - tool
+  - decision
+  - policy
+  - roadmap
+  - project
+  - technical-scope
+  - pain-register
+  - evidence-index
+  - data-capture
+  - interview-plan
+  - research
+  - evidence
+  - reference-model
+  - archetype
+  - model-variant
+  - journey
+  - capability-category
+  - metric
+  - automation-pattern
+  - case-study
+  - reference-assessment

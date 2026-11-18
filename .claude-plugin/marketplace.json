@@ -1,0 +1,13 @@
+{
+  "name": "fde-app",
+  "owner": {
+    "name": "3rd Brain"
+  },
+  "description": "FDE App, installed from GitHub or a downloaded folder.",
+  "plugins": [
+    {
+      "name": "fde-app",
+      "source": "./"
+    }
+  ]
+}

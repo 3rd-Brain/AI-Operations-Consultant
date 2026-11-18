@@ -1,158 +1,63 @@
-![version](https://img.shields.io/badge/version-3.3.0-blue) ![license](https://img.shields.io/badge/license-GPL--3.0-blue) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
+# FDE App
 
-[Walkthrough](WALKTHROUGH.md) · [Methodology](#methodology) · [Examples](#examples) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
+FDE App turns Claude or Codex into your company's Forward Deployed Engineer (FDE). It documents how a company really runs, finds where work waits, loops, or depends on one person, and plans, values, and rolls out the changes that matter, in your own Claude or Codex. This plugin carries the FDE App skill and connects it to FDE App, where each company's library is kept, checked on every save, and readable in the web app.
 
-# AI Operations Consultant
+You may use FDE App for your own company's operations under the FDE App License (see `LICENSE`). Using it to serve clients needs a separate agreement with Digital Operations Institute.
 
-A consultant that produces build specs your coding agent can ship from.
+## Install
 
-For founders and operators with an automation backlog they haven't shipped. The consultant runs a session and produces a build spec your coding agent can execute against.
-
-## Quick Start
+**Claude Code, from GitHub.**
 
 ```bash
-git clone https://github.com/3rd-Brain/AI-Operations-Consultant.git
-mkdir -p ~/.claude/skills
-cp -r AI-Operations-Consultant/skills/ai-ops ~/.claude/skills/
+claude plugin marketplace add 3rd-Brain/AI-Operations-Consultant
+claude plugin install fde-app@fde-app --scope user
 ```
 
-Then invoke `/ai-ops` in any Claude Code or Cowork session. Tell it what you're shipping, where to level up, or what needs documenting. Drop in meeting transcripts, recorded calls, walkthroughs, or any existing docs - the consultant pulls vocabulary and context from them directly, so you don't retype what you've already said. It builds out a living company library and produces specs your coding agents or developers can build from.
+Start Claude Code, run `/mcp`, choose `fde-app`, and sign in with the email you use for FDE App.
 
-## What You Get
-
-Every session writes to a per-company library you keep and grow over time.
-
-- **Company profile** - what you do, who's on the team, what stack you run
-- **Data architecture** - your records mapped across tools, with sources of truth and fragmentation flagged
-- **Workflow SOPs** - step-by-step playbooks any teammate can run
-- **Role docs** - responsibilities by cadence + KOODAR breakdown per seat
-- **Roadmaps** - maturity-progression plan with priority projects and acceptance signals
-- **Build scopes** - executable specs your coding agent can ship from in one sitting
-
-Plus auto-captured `decisions/` (significant choices, dated) and `glossary.md` (your business's vocabulary).
-
-### Navigator — see your library
-
-The skill ships with a zero-dependency local web UI (`skills/ai-ops/scripts/navigator/`) that renders the library as a wiki + dashboard: an org chart built from your role docs, color-coded step maps for every workflow SOP, live dashboard facts derived from the files (counts, completeness, top pains, maturity signal), and in-place editing of any page. Ask the consultant to "open the navigator," or run it yourself:
+**Claude Code, from a download.** Unzip the download, then run, with the path to the unzipped `fde-app` folder:
 
 ```bash
-ROOT="<your-company-library>" node ~/.claude/skills/ai-ops/scripts/navigator/server.mjs --port 4173
+claude plugin marketplace add ./fde-app
+claude plugin install fde-app@fde-app --scope user
 ```
 
-Localhost only, markdown writes only, no separate data store — it reads and writes the same library files.
+Start Claude Code, run `/mcp`, choose `fde-app`, and sign in with the email you use for FDE App.
 
-## How It Works
+**Codex** (the Codex CLI or the Codex app; the IDE extension has no plugins). Unzip the download, then run, with the path to the unzipped `fde-app` folder:
 
-You have a conversation. The consultant dispatches specialists when work benefits from a fresh context window. The deliverables come back as files in a per-company library you own.
-
-```
-   user
-    │
-    ▼
-┌─────────────────────────┐
-│  /ai-ops                │   conversational orchestrator
-│(one skill, one session) │
-└──────────┬──────────────┘
-           │  dispatches specialists in subagents
-           ▼
-┌──────────────────────────────────────────────────────────┐
-│  Workflow chain   Company chain   Role   Roadmap   Build  │
-│  (SOP / tools /   (profile /      Scope                   │
-│   automation)      stack research /                       │
-│                    data arch)                             │
-└──────────┬───────────────────────────────────────────────┘
-           │  writes files to the per-company library
-           ▼
-       <company>/
-         profile.md · data-architecture.md · glossary.md
-         workflows/ · roles/ · tools/
-         decisions/ · roadmaps/ · scopes/
+```bash
+codex plugin marketplace add ./fde-app
+codex plugin add fde-app@fde-app
+codex mcp login fde-app
 ```
 
-The library is plain markdown so you can read and edit any file directly.
+Sign in with the email you use for FDE App. On Windows, if PowerShell refuses to run `codex`, type `codex.cmd` instead. Then add these lines to `~/.codex/config.toml` (evidence intake runs six subagents at once, and Codex allows four by default):
 
-## Methodology
+```toml
+[agents]
+max_concurrent_threads_per_session = 24
+```
 
-Five frameworks the consultant applies. Source: the Digital Operations Playbook (bundled in the skill at `references/playbook/`).
+On Windows, also add these, so Codex can read the plugin's files:
 
-- **5 Levels of Digital Operations** - where you sit on the maturity scale (Information Silos → Connectable Cloud → Unified Data Layer → Automated Workflows → AI Automation). Level 3 is the flywheel threshold.
-- **Three Cs** - Consistency → Clarity → Capacity. The chain reaction you unlock as you level up. Each one is a prerequisite for the next.
-- **5 Pillars** - Talent Strategy, Workflow Optimization, Digital Architecture, Knowledge Management, AI Automation. What you actually build to move the levels.
-- **People → Process → Tools** - the implementation sequence within every pillar. Skip it and you ship shelfware.
-- **KOODAR** - the AI capabilities vocabulary (Know / Observe / Orient / Decide / Act / Review). The language for designing and documenting AI tools and agents.
+```toml
+[windows]
+sandbox = "unelevated"
+```
 
-## What to ask for and what the consultant produces.
+Start a new Codex session.
 
-| What you say                                           | What you get                                                                                                                                         |
-| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| "Map how our business runs"                            | The full picture: a company profile, cross-tool data architecture, and entries for every tool you operate on                                         |
-| "Walk through our quoting workflow"                    | A step-by-step SOP a teammate can follow, plus research on every tool in the workflow and the automation opportunities buried in it                  |
-| "Document the head of sales role"                      | A role doc with responsibilities by cadence, objectives and metrics, and a KOODAR capability breakdown                                               |
-| "Give me a roadmap to get our marketing team AI ready" | A sequenced plan: priority projects, acceptance signals, scope-specific pitfalls, and the library work that needs to happen first                    |
-| "Scope the carrier-quote extractor"                    | A build spec your coding agent can ship from: stack picks, input/output contracts, tool docs and APIs, examples, and test-driven acceptance criteria |
+**Cowork, claude.ai, and the desktop app.** Customize, then Plugins, then Add, then Upload plugin, and choose the zip. Open the plugin's Connectors tab and connect FDE App, signing in with the email you use for FDE App.
 
-Anything mentioned but not yet in the library - a tool, a role, a workflow - gets a stub file created automatically. The library grows with every session.
+## First message
 
-## Compatibility
+> I'm new to FDE App. Help me get started with my company.
 
-The skill ships as a folder (`skills/ai-ops/`) and a zipped bundle (`dist/cowork/ai-ops.skill`). All five supported runtimes have native skill systems that accept the same SKILL.md + subfolder structure.
+## Updating
 
-| Agent | Skills directory | Install |
-|---|---|---|
-| **Claude Code** | `~/.claude/skills/` | `cp -r skills/ai-ops ~/.claude/skills/` |
-| **Cowork** | (managed in-app) | Import `dist/cowork/ai-ops.skill` via **Skills → Create skill → Import** |
-| **OpenClaw** | `~/.openclaw/skills/` | `cp -r skills/ai-ops ~/.openclaw/skills/` or `unzip dist/cowork/ai-ops.skill -d ~/.openclaw/skills/` |
-| **Codex CLI** (OpenAI) | `~/.agents/skills/` | `cp -r skills/ai-ops ~/.agents/skills/` or `unzip dist/cowork/ai-ops.skill -d ~/.agents/skills/` |
-| **Hermes** (NousResearch) | `~/.hermes/skills/` | `hermes skills install https://github.com/3rd-Brain/AI-Operations-Consultant/raw/main/dist/cowork/ai-ops.skill` |
+Download the new version from https://fdeapp.digitaloperationsinstitute.com/welcome. In Claude Code, unzip it over the same folder and run `/reload-plugins`. In Codex, unzip it over the same folder, run `codex plugin remove fde-app@fde-app` and `codex plugin add fde-app@fde-app`, and start a new session. In Cowork and claude.ai, upload the new zip.
 
-All five read SKILL.md YAML frontmatter (`name`, `description`). The `license` key is Claude Code / Cowork only - silently ignored by the others.
+## Help
 
-For any other Claude or OpenAI-compatible runtime, point it at `skills/ai-ops/SKILL.md` as the system prompt.
-
-## Examples
-
-### Document an inquiry-to-quote workflow
-
-> "Walk me through how new event inquiries become signed quotes. We use Good Shuffle, HoneyBook, and Gmail."
-
-The consultant dispatches the workflow chain. Output:
-- `workflows/inquiry-to-quote.md` - full SOP with steps, tools per step, escalation paths, and an Automation / Agent Potential section
-- `.ai-ops/research/inquiry-to-quote-tools-2026-05-21.md` - API capabilities, native integrations, integration walls
-- Stub files created for any tool / role / record mentioned but not yet in the library
-
-### Plan a level-up roadmap for the proposal workflow
-
-> "I want a roadmap for getting our proposal workflow team-shared so any teammate can produce a consistent output. We're at Level 2 today."
-
-The consultant dispatches the Roadmap specialist. Output:
-- `roadmaps/proposal-workflow-team-shared-<date>.md` - operator goal, three Priority projects, two Upcoming projects, acceptance signals, scope-specific pitfalls, next-action library work
-
-### Scope a build for the highest-priority automation
-
-After the workflow chain runs, ask:
-
-> "Scope the carrier-quote PDF extractor. The one from our discussion in /Meetings from yesterday."
-
-The consultant walks stack selection (Python + Pydantic? Make scenario? Existing Airtable? Each slot one question at a time), then dispatches Build Scope. Output:
-- `scopes/carrier-quote-pdf-extractor-<date>.md` - what to build, the chosen stack, input/output contracts, tools and APIs, records read/written, implementation notes, test-driven acceptance criteria
-
-Drop the scope into Claude Code, Cowork, or hand to a developer.
-
-## Configuration
-
-The consultant works out of the box. Per-session things you can tune in conversation:
-
-- **Library location** - where your per-company files live (default: a folder you specify when the session opens)
-- **Existing research** - if you've already gathered tool API docs or run prior research, drop the files in `<library>/.ai-ops/research/` and the consultant picks them up
-
-No config file required. The library structure carries everything.
-
-## Community & Support
-
-- **Issues:** [github.com/3rd-Brain/AI-Operations-Consultant/issues](https://github.com/3rd-Brain/AI-Operations-Consultant/issues)
-- **Methodology source:** [digitaloperationsinstitute.com](https://digitaloperationsinstitute.com)
-- **Behind the methodology:** [3rdbrain.co](https://3rdbrain.co) - the consulting firm that built it across 50+ engagements
-
-## License
-
-GPL-3.0 - see [LICENSE](LICENSE).
+Ask "help" or "what's next?" at any time. Questions or feedback: michael@3rdbrain.co.
