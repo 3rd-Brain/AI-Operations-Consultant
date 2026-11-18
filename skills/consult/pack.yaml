@@ -1,5 +1,5 @@
 kind: ai-ops-pack
-version: "4.8.0"
+version: "4.9.0"
 supports_ai_ops: ">=4.0.0 <5.0.0"
 runtime:
   node: ">=20.0.0 <25.0.0"

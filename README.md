@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-4.8.0-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
+![version](https://img.shields.io/badge/version-4.9.0-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
 [Install](#install) · [Who it's for](#who-its-for) · [How it works](#how-it-works) · [Methodology](#methodology) · [Support](#support)
 

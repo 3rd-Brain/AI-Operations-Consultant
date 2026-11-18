@@ -1,11 +1,13 @@
 ---
-name: fde-app
-description: "AI operations consulting with FDE App: maps how a company really runs, ranks what slows it, and plans, values, and rolls out fixes. Use to get started with FDE App or for FDE App help."
+name: consult
+description: "FDE App, a Forward Deployed Engineer for a company: answers questions about the company from its saved library with the document cited, advises on decisions, and maps, plans, and scopes changes in one conversation. Use for any FDE App request or question, and whenever no other FDE App skill clearly fits."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.8.0
+FDE App 4.9.0
 
 # AI Operations Consultant
+
+This skill is the FDE App method and its general entry. The other FDE App skills (`start`, `map`, `plan`, `scope`, `help`) load it and only set where to start.
 
 ## Identity
 
@@ -318,7 +320,7 @@ Do not make the same fact independently canonical in two places. In particular, 
 ```text
 User
   -> Claude (Claude Code, Cowork, claude.ai, or the desktop app) or Codex
-      -> FDE App orchestrator (this skill)
+      -> FDE App orchestrator (this skill; `start`, `map`, `plan`, `scope`, and `help` load it)
           -> specialist prompts in prompts/, each run by a fresh subagent
           -> FDE App connector
               -> the company library: documents, versions, checks on every save
@@ -396,6 +398,8 @@ Approval at one level never grants the next. An approval counts only in the word
 **Question policy.** Finish the work you can first. Then save every question to `open-questions.md`, so it lives in the library and not only in the conversation: each question in plain language, with who can answer it, what it blocks, and where its answer will land. In the reply, list at most the five that block the most, as one numbered list. Don't list the rest: say how many more are in `open-questions.md` and who can answer them, and offer the conversation that would answer them, usually a short interview with that person, with a guide from the interview planner. Do not decide which ones are the user's. When an answer comes, put it in the document it belongs to and remove the question; a question the user defers simply stays.
 
 The library is never assumed to be greenfield.
+
+**When no other FDE App skill set the start.** A question about the company: answer from the library (`search_documents`, `read_document`), cite the document and section, and say plainly when the library does not say. A mixed or unclear ask: read where the library stands, then run the chain the outcome needs. Advice on a decision: reason from the framework canon and the saved evidence, name what is assumed, and record the choice as a Decision when the user makes one.
 
 ## Client library shape
 
@@ -580,7 +584,7 @@ The orchestrator performs a transition; no script, elapsed time, child state, te
 
 ### Start every subagent fresh
 
-- This skill's folder is `${CLAUDE_SKILL_DIR}`; where the host does not fill that in, it is the folder that holds this file. Every `prompts/`, `references/`, and `templates/` path in this skill is relative to it. A subagent starts in the user's working folder, so give it absolute paths under that folder, or read the prompt yourself and send its text with the variables filled in.
+- This skill's folder is `${CLAUDE_SKILL_DIR}`; where the host does not fill that in, it is the folder that holds this file, whichever FDE App skill you were invoked through. Every `prompts/`, `references/`, and `templates/` path in this skill is relative to it. A subagent starts in the user's working folder, so give it absolute paths under that folder, or read the prompt yourself and send its text with the variables filled in.
 - A subagent starts with no copy of this conversation. In Claude Code and Cowork, always name an agent type such as `general-purpose`, never `fork`, and set `model: "sonnet"` for every specialist; the conversation itself stays on the user's model. In Codex, set `fork_turns` to `"none"` (on older multi-agent versions, `fork_context: false`). Subagents reach the library through the same FDE App connector and read the method from this skill's folders.
 - Pass source material and draft artifacts by their library path, never pasted in. Your own words (the outcome, the context packet, paths, an approval quote) may go inline.
 - Send the specialist prompt with its variables filled in, or its path plus the values.
@@ -590,7 +594,7 @@ The orchestrator performs a transition; no script, elapsed time, child state, te
 
 Every dispatch receives:
 
-- first, this line, word for word: "Your prompt and this packet are complete. Do not load the FDE App skill or read its SKILL.md. Call the FDE App tools directly by name, and never print the list of all tools." A subagent that loads this skill spends its context on the orchestrator's instructions, and in Codex, which offers every subagent the installed skills, its reads get cut, as they do when it prints the tool list;
+- first, this line, word for word: "Your prompt and this packet are complete. Do not load any FDE App skill or read its SKILL.md. Call the FDE App tools directly by name, and never print the list of all tools." A subagent that loads this skill spends its context on the orchestrator's instructions, and in Codex, which offers every subagent the installed skills, its reads get cut, as they do when it prints the tool list;
 - the requested outcome;
 - the company ID;
 - a starting context packet or declared file list; the specialist may read anything else in the library the work needs;

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fde-app",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "FDE App, a Forward Deployed Engineer in your own Claude or Codex: map how a company really runs, rank what slows it down, and plan, value, and roll out improvements.",
   "author": {
     "name": "Digital Operations Institute",
@@ -48,7 +48,7 @@
         "logo": "./assets/logo.png"
       },
       "publication": {
-        "release_notes": "FDE App 4.8.0: the full method for your own company, in ChatGPT and Codex."
+        "release_notes": "FDE App 4.9.0: consult, plus start, map, plan, scope, and help to begin in the right place."
       },
       "review": {
         "commerce": false,
@@ -57,47 +57,31 @@
             {
               "description": "A new user starts",
               "prompt": "I'm new to FDE App. Help me get started with my company.",
-              "tools_triggered": [
-                "get_help",
-                "list_companies"
-              ],
+              "tools_triggered": "get_help, list_companies",
               "expected_behavior": "Explains in a few lines what FDE App does, finds Brightline Plumbing (or asks which company and offers to create it), and asks for the first piece of evidence: a few sentences on the business and the one result wanted."
             },
             {
               "description": "Map a workflow from a transcript",
               "prompt": "Map how a service call gets booked at Brightline from this transcript: Dana (dispatcher): A customer calls, I check the calendar in ServiceTitan, book the slot, and text the tech. If it's urgent I call the tech first.",
-              "tools_triggered": [
-                "save_documents",
-                "list_documents"
-              ],
+              "tools_triggered": "save_documents, list_documents",
               "expected_behavior": "Saves the transcript as a source, writes the workflow with its steps and an SOP, names who does each step, marks what was reported rather than observed, and lists open questions."
             },
             {
               "description": "Answer from the library",
               "prompt": "Who approves refunds at Brightline, and where is that written down?",
-              "tools_triggered": [
-                "search_documents",
-                "read_document"
-              ],
+              "tools_triggered": "search_documents, read_document",
               "expected_behavior": "Answers from the saved documents and cites the document and section; says plainly if the library doesn't say."
             },
             {
               "description": "Rank what slows the company",
               "prompt": "What slows Brightline down the most? Rank it.",
-              "tools_triggered": [
-                "get_engagement_state",
-                "read_document",
-                "save_documents"
-              ],
+              "tools_triggered": "get_engagement_state, read_document, save_documents",
               "expected_behavior": "Reads the saved workflows and pains, saves a ranked pains register around the one constraint, and explains the top item in a few lines."
             },
             {
               "description": "What's next",
               "prompt": "What should I do next for Brightline?",
-              "tools_triggered": [
-                "get_engagement_state",
-                "list_follow_ups"
-              ],
+              "tools_triggered": "get_engagement_state, list_follow_ups",
               "expected_behavior": "Gives one next step with its reason, based on what the library holds and anything due."
             }
           ],
