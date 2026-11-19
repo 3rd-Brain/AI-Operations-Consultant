@@ -3,7 +3,7 @@ name: scope
 description: "Specify and roll out a change with FDE App: Technical Scopes a builder can follow, eval plans for anything with AI in it, release gates, rollout and training plans, and checks after go-live. Use to write a scope or spec for an approved Project, plan its rollout or evals, or check results after launch."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.1
+FDE App 4.9.2
 
 # FDE App: scope
 

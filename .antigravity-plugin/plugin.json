@@ -1,0 +1,35 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "fde-app",
+  "displayName": "FDE App: SOPs & Workflows",
+  "version": "4.9.2",
+  "description": "FDE App works like a Forward Deployed Engineer inside your company: it documents how your company really runs, then ranks what slows it down and plans what to change.",
+  "logo": "assets/logo.png",
+  "suggestedPrompts": [
+    "Our SOPs are out of date. Help me document how we actually run.",
+    "Map our workflows from these meeting transcripts and show who does what.",
+    "Where is our team losing time, and what should we automate first?"
+  ],
+  "author": {
+    "name": "Digital Operations Institute",
+    "email": "michael@3rdbrain.co",
+    "url": "https://digitaloperationsinstitute.com"
+  },
+  "homepage": "https://fdeapp.digitaloperationsinstitute.com/welcome",
+  "repository": "https://github.com/3rd-Brain/AI-Operations-Consultant",
+  "license": "LicenseRef-FDE-App-License",
+  "keywords": [
+    "SOP",
+    "SOPs",
+    "workflow",
+    "workflows",
+    "automation",
+    "automations",
+    "process documentation",
+    "workflow mapping",
+    "bottlenecks",
+    "what to automate",
+    "AI implementation",
+    "business operations"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fde-app",
-  "version": "4.9.1",
+  "version": "4.9.2",
   "description": "FDE App, a Forward Deployed Engineer in your own Claude or Codex: map how a company really runs, rank what slows it down, and plan, value, and roll out improvements.",
   "author": {
     "name": "Digital Operations Institute",
@@ -48,7 +48,7 @@
         "logo": "./assets/logo.png"
       },
       "publication": {
-        "release_notes": "FDE App 4.9.1: consult, plus start, map, plan, scope, and help to begin in the right place."
+        "release_notes": "FDE App 4.9.2: consult, plus start, map, plan, scope, and help to begin in the right place."
       },
       "review": {
         "commerce": false,

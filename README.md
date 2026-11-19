@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-4.9.1-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
+![version](https://img.shields.io/badge/version-4.9.2-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
 [Install](#install) · [Who it's for](#who-its-for) · [How it works](#how-it-works) · [Methodology](#methodology) · [Support](#support)
 
@@ -117,6 +117,14 @@ sandbox = "unelevated"
 ```
 
 Start a new Codex session.
+
+**Antigravity.** Run:
+
+```bash
+agy plugin install https://github.com/3rd-Brain/AI-Operations-Consultant
+```
+
+When Antigravity asks, sign in with the email you use for FDE App.
 
 **Cowork, claude.ai, and the desktop app.** Customize, then Plugins, then Add, then Upload plugin, and choose the zip. Open the plugin's Connectors tab and connect FDE App, signing in with the email you use for FDE App.
 

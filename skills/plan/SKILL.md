@@ -3,7 +3,7 @@ name: plan
 description: "Plan what to change with FDE App: rank pains around the one constraint, draft a Roadmap, turn approved candidates into Projects, sort each step (remove, code, decision model, LLM, agent, or person), design the future state, and value it in hours. Use to find what slows a company, decide what to fix or automate first, or say what a change is worth."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.1
+FDE App 4.9.2
 
 # FDE App: plan
 

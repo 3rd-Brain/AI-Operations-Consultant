@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "fde-app": {
+      "serverUrl": "https://fde.digitaloperationsinstitute.com/mcp"
+    }
+  }
+}

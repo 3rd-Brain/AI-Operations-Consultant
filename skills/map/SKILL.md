@@ -3,7 +3,7 @@ name: map
 description: "Map how a company really runs with FDE App: company profile, tools and data architecture, roles, workflows and step-by-step SOPs, interview plans, and intake of transcripts, documents, and exports. Use to document a company, map a workflow or SOP, add evidence, or plan who to interview."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.1
+FDE App 4.9.2
 
 # FDE App: map
 

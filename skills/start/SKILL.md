@@ -3,7 +3,7 @@ name: start
 description: "Start FDE App, a Forward Deployed Engineer for a company: set up the company, take the first evidence (a few sentences, a call transcript, SOPs, or an export), and show a first useful result. Use for a first session, a new company or client, or when the user says to start with FDE App."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.1
+FDE App 4.9.2
 
 # FDE App: start
 

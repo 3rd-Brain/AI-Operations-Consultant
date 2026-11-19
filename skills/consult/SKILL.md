@@ -3,7 +3,7 @@ name: consult
 description: "FDE App, a Forward Deployed Engineer for a company: answers questions about the company from its saved library with the document cited, advises on decisions, and maps, plans, and scopes changes in one conversation. Use for any FDE App request or question, and whenever no other FDE App skill clearly fits."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.1
+FDE App 4.9.2
 
 # AI Operations Consultant
 
