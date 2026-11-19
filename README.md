@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-4.9.0-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
+![version](https://img.shields.io/badge/version-4.9.1-blue) ![license](https://img.shields.io/badge/license-FDE%20App%20License-lightgrey) ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-orange) ![Codex](https://img.shields.io/badge/Codex-compatible-green) ![Cowork](https://img.shields.io/badge/Cowork-compatible-purple)
 
 [Install](#install) · [Who it's for](#who-its-for) · [How it works](#how-it-works) · [Methodology](#methodology) · [Support](#support)
 
@@ -94,7 +94,7 @@ claude plugin install fde-app@fde-app --scope user
 
 Start Claude Code, run `/mcp`, choose `fde-app`, and sign in with the email you use for FDE App.
 
-**Codex** (the Codex CLI or the Codex app; the IDE extension has no plugins). Unzip the download, then run, with the path to the unzipped `fde-app` folder:
+**Codex** (the Codex CLI or the Codex app; the IDE extension has no plugins). FDE App needs Codex 0.169 or later: check with `codex --version`, and update with `npm install -g @openai/codex`. Unzip the download, then run, with the path to the unzipped `fde-app` folder:
 
 ```bash
 codex plugin marketplace add ./fde-app

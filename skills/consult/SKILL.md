@@ -3,7 +3,7 @@ name: consult
 description: "FDE App, a Forward Deployed Engineer for a company: answers questions about the company from its saved library with the document cited, advises on decisions, and maps, plans, and scopes changes in one conversation. Use for any FDE App request or question, and whenever no other FDE App skill clearly fits."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.0
+FDE App 4.9.1
 
 # AI Operations Consultant
 
@@ -473,14 +473,14 @@ Map a Journey when the user needs that view. Do not create or invoke one merely 
 Research runs on native and connected tools, not on an API client, adapter, script, or harness-specific executor. Each tool has one role:
 
 1. **Native search** discovers candidate sources and query vocabulary. Search snippets are leads, never evidence.
-2. **Firecrawl**, or the browser's page text, captures selected web pages in full. A web fetch that returns a summary finds pages; it never supports a claim. A fact that nothing captured or said supports becomes a question for the client.
-3. **TranscriptAPI** retrieves selected YouTube transcripts.
+2. **Full-page capture**, from the browser's page text or a connected tool that returns a page's full text, captures selected web pages. A web fetch that returns a summary finds pages; it never supports a claim. A fact that nothing captured or said supports becomes a question for the client.
+3. **A connected transcript tool**, where the host has one, retrieves selected video transcripts.
 4. Save every material **external** source as its own Evidence artifact **before** synthesis.
 5. The Research artifact cites external sources through their saved Evidence wrappers and internal repository files directly by path and heading anchor.
 
 For every selected source, the saved Evidence records: the canonical safe locator; the publisher or author; the publication date when known; the capture date and the capture engine; the source type and language; quality, applicability, freshness, conflicts, and limitations; the unchanged captured text or transcript; and relevant excerpts or observations kept separate from the raw capture.
 
-If a capability is unavailable, name it and identify the coverage it affects. Do not substitute model memory for missing evidence or claim full completion — qualify only the affected claims and comparative work. Live credentials stay in the connected host or MCP environment; never commit API keys, `.env` files, credentials in URLs, logs, artifacts, or specialist returns. `INSTALL.md` may name required capabilities and environment-variable names only.
+If a capability is unavailable, name it and identify the coverage it affects. Do not substitute model memory for missing evidence or claim full completion — qualify only the affected claims and comparative work. Live credentials stay in the connected host or MCP environment; never commit API keys, `.env` files, credentials in URLs, logs, artifacts, or specialist returns.
 
 ## When the method should change
 

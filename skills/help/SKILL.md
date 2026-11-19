@@ -3,7 +3,7 @@ name: help
 description: "FDE App help: what FDE App can do, how to do something with it, and what to do next for this company, from what the library holds and the follow-ups due. Use when the user asks for help, what FDE App can do, what's next, or what is due."
 license: FDE App License. See LICENSE.
 ---
-FDE App 4.9.0
+FDE App 4.9.1
 
 # FDE App: help
 

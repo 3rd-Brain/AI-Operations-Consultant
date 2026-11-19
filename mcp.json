@@ -3,7 +3,17 @@
   "mcpServers": {
     "fde-app": {
       "type": "streamable-http",
-      "url": "https://fde.digitaloperationsinstitute.com/mcp"
+      "url": "https://fde.digitaloperationsinstitute.com/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "cimd"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -43,8 +43,8 @@ evidence:
 <!--
 One Evidence artifact per material source, saved before synthesis. Record: the canonical
 safe locator, publisher or author, publication date when known, capture date and capture
-engine (native search discovers; Firecrawl captures pages; TranscriptAPI captures YouTube
-transcripts), source type and language, and quality/applicability/freshness/conflicts/
+engine (native search discovers; full-page capture or a transcript tool captures the
+source), source type and language, and quality/applicability/freshness/conflicts/
 limitations. Native-search snippets are leads, not evidence. Keep the unchanged capture
 separate from the excerpts. Do not store credentials in the locator, capture, or notes.
 -->

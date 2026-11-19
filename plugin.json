@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fde-app",
-  "version": "4.9.0",
+  "version": "4.9.1",
   "description": "FDE App, a Forward Deployed Engineer in your own Claude or Codex: map how a company really runs, rank what slows it down, and plan, value, and roll out improvements.",
   "author": {
     "name": "Digital Operations Institute",
@@ -48,7 +48,7 @@
         "logo": "./assets/logo.png"
       },
       "publication": {
-        "release_notes": "FDE App 4.9.0: consult, plus start, map, plan, scope, and help to begin in the right place."
+        "release_notes": "FDE App 4.9.1: consult, plus start, map, plan, scope, and help to begin in the right place."
       },
       "review": {
         "commerce": false,
@@ -70,7 +70,7 @@
               "description": "Answer from the library",
               "prompt": "Who approves refunds at Brightline, and where is that written down?",
               "tools_triggered": "search_documents, read_document",
-              "expected_behavior": "Answers from the saved documents and cites the document and section; says plainly if the library doesn't say."
+              "expected_behavior": "Searches the Brightline library and reads policies/refunds.md. Cites the Rule section and states that office manager Grace Lee approves refunds up to and including $250 and owner Sam Okafor approves refunds above $250."
             },
             {
               "description": "Rank what slows the company",
@@ -87,15 +87,15 @@
           ],
           "negative": [
             {
-              "description": "Unrelated creative writing",
+              "description": "Unrelated creative writing. The assistant can write the poem directly. FDE App tools and skills should not be invoked.",
               "prompt": "Write a short poem about autumn."
             },
             {
-              "description": "General knowledge",
+              "description": "General knowledge unrelated to the company library. The assistant can answer Canberra directly. FDE App tools and skills should not be invoked.",
               "prompt": "What's the capital of Australia?"
             },
             {
-              "description": "Data conversion with no company context",
+              "description": "Standalone format conversion without a company or documentation request. The assistant can convert the supplied rows directly. FDE App tools and skills should not be invoked and no library documents should be created or changed.",
               "prompt": "Convert this CSV to JSON: name,phone; Ana,555-0101; Bo,555-0102"
             }
           ]
