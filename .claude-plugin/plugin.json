@@ -4,9 +4,9 @@
   "version": "4.9.2",
   "description": "FDE App, a Forward Deployed Engineer in your own Claude or Codex: map how a company really runs, rank what slows it down, and plan, value, and roll out improvements.",
   "author": {
-    "name": "3rd Brain",
+    "name": "Digital Operations Institute",
     "email": "michael@3rdbrain.co",
-    "url": "https://3rdbrain.co"
+    "url": "https://digitaloperationsinstitute.com"
   },
   "homepage": "https://fdeapp.digitaloperationsinstitute.com/welcome",
   "privacyPolicyUrl": "https://fdeapp.digitaloperationsinstitute.com/privacy"

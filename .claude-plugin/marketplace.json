@@ -1,7 +1,7 @@
 {
   "name": "fde-app",
   "owner": {
-    "name": "3rd Brain"
+    "name": "Digital Operations Institute"
   },
   "description": "FDE App, installed from GitHub or a downloaded folder.",
   "plugins": [
